@@ -29,7 +29,7 @@ namespace DataBase.Migrations
 
                     b.Property<string>("DepartmentName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -55,6 +55,8 @@ namespace DataBase.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentName");
+
                     b.ToTable("Admins");
                 });
 
@@ -68,7 +70,7 @@ namespace DataBase.Migrations
 
                     b.Property<string>("ManagerId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Number")
                         .IsRequired()
@@ -79,9 +81,13 @@ namespace DataBase.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ManagerId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Calls");
                 });
@@ -103,7 +109,7 @@ namespace DataBase.Migrations
 
                     b.Property<string>("DepartmentName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -129,6 +135,8 @@ namespace DataBase.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentName");
+
                     b.ToTable("Managers");
                 });
 
@@ -147,9 +155,11 @@ namespace DataBase.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Notifications");
                 });
@@ -181,9 +191,11 @@ namespace DataBase.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("TempCalls");
                 });
@@ -245,11 +257,113 @@ namespace DataBase.Migrations
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("UserId");
 
+                    b.HasIndex("RoleName");
+
                     b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("DataBase.Entity.Admin", b =>
+                {
+                    b.HasOne("DataBase.Entity.Department", "Department")
+                        .WithMany("Admins")
+                        .HasForeignKey("DepartmentName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("DataBase.Entity.Call", b =>
+                {
+                    b.HasOne("DataBase.Entity.Manager", "Manager")
+                        .WithMany("Calls")
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataBase.Entity.User", "User")
+                        .WithMany("Calls")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Manager");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DataBase.Entity.Manager", b =>
+                {
+                    b.HasOne("DataBase.Entity.Department", "Department")
+                        .WithMany("Managers")
+                        .HasForeignKey("DepartmentName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("DataBase.Entity.Notification", b =>
+                {
+                    b.HasOne("DataBase.Entity.User", "User")
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DataBase.Entity.TempCall", b =>
+                {
+                    b.HasOne("DataBase.Entity.User", "User")
+                        .WithMany("TempCalls")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DataBase.Entity.UserRole", b =>
+                {
+                    b.HasOne("DataBase.Entity.Role", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("DataBase.Entity.Department", b =>
+                {
+                    b.Navigation("Admins");
+
+                    b.Navigation("Managers");
+                });
+
+            modelBuilder.Entity("DataBase.Entity.Manager", b =>
+                {
+                    b.Navigation("Calls");
+                });
+
+            modelBuilder.Entity("DataBase.Entity.Role", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("DataBase.Entity.User", b =>
+                {
+                    b.Navigation("Calls");
+
+                    b.Navigation("Notifications");
+
+                    b.Navigation("TempCalls");
                 });
 #pragma warning restore 612, 618
         }

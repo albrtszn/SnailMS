@@ -7,29 +7,101 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SnailMS.styles.css" asp-append-version="true" />
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.10/jquery.validate.unobtrusive.min.js"></script>
+
+    
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SnailMS</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+
+    <!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">-->
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" style="margin-top:-4px;" href="/">SnailMS</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarColor01">
+                        <ul class="navbar-nav me-auto" style="text-align:right;">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/Menu">Меню</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/Feedback">Отзывы</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/AboutUs">О нас</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/Contact">Контакты</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Home/Privacy">Соглашение</a>
+                            </li>
+                        </ul>
+                        @if (ViewBag.message == null && ViewBag.role == null)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" style=" float:right; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Войти в аккаунт</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-controller="Home" asp-action="Login">Войти</a>
+                                    <a class="dropdown-item" asp-controller="Home" asp-action="Register">Регистрация</a>
+                            </li>
+                        }
+                        else
+                        {
+                            @if (ViewBag.role.Equals("manager"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" style=" float:right; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Менеджер</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-controller="Manager" asp-action="Index">Главная</a>
+                                        <a class="dropdown-item" asp-controller="Manager" asp-action="Item">Товары</a>
+                                        <a class="dropdown-item" asp-controller="Manager" asp-action="User">Пользователи</a>
+                                        <a class="dropdown-item" asp-controller="Home" asp-action="LogOut">Выйти</a>
+                                </li>
+                            }
+                            @if (ViewBag.role.Equals("admin"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" style=" float:right; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Админ</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Index">Главная</a>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Item">Товары</a>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="User">Пользователи</a>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Manager">Менеджеры</a>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Role">Роли</a>
+                                        <a class="dropdown-item" asp-controller="Home" asp-action="LogOut">Выйти</a>
+                                </li>
+                            }if (ViewBag.role.Equals("user"))
+                            {
+                                <li class="nav-item dropdown">
+                                    @{/*
+                                        var imgSrc = "/avatar.webp";
+                                        if (ViewBag.message != null)
+                                        {
+                                            var base64 = Convert.ToBase64String(service.GetUserAvatar(ViewBag.message));
+                                            imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                        }*/
+                                    }
+                                    <a class="nav-link dropdown-toggle" style="float:right; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <img src= "" alt="avatar" class="rounded-circle img-fluid" style="width: 50px;">
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" asp-controller="Home" asp-action="Account" asp-route-userId=@ViewBag.message>Аккаунт</a>
+                                        <a class="dropdown-item" asp-controller="Home" asp-action="Cart" asp-route-userId=@ViewBag.message>Корзина</a>
+                                        <a class="dropdown-item" style="color:red;" asp-controller="Home" asp-action="LogOut" asp-route-userId=@ViewBag.message>Выйти</a>
+                                    </div>
+                                </li>
+                            }
+                        }
+
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
+            </nav>
+    
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -45,5 +117,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

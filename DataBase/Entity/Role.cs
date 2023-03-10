@@ -13,5 +13,7 @@ namespace DataBase.Entity
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Name { get; set; }
+
+        public List<UserRole> UserRoles { get; set; }
     }
 }

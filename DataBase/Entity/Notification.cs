@@ -17,5 +17,7 @@ namespace DataBase.Entity
         [Required(ErrorMessage = "Введите сообщение")]
         [StringLength(50, MinimumLength = 5, ErrorMessage = "Минимальная длина - 5 символов, максимальная - 50 символов")]
         public string Message { get; set; }
+
+        public User User { get; set; }  
     }
 }

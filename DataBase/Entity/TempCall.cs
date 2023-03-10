@@ -17,5 +17,7 @@ namespace DataBase.Entity
         public string Number { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+
+        public User User { get; set; }
     }
 }

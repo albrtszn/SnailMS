@@ -22,7 +22,26 @@ namespace SnailMS.Controllers
 
         public IActionResult Index()
         {
-            return View(service.Users.GetAllUserDto());
+            return View();
+        }
+
+        [HttpGet("/Home/login")]
+        public IActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginModel userDto, string returnUrl)
+        {
+            logger.LogInformation($"try of login into-> login:{userDto.Number}, password:{userDto.Password}");
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("error","Данные не верны");
+                //return Us();
+            }
+
+            return Content("неправильная информация");
         }
 
         public IActionResult Privacy()

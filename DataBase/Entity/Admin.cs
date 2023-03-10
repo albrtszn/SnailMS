@@ -23,5 +23,7 @@ namespace DataBase.Entity
         public string SecondName { get; set; }
         public string LastName { get; set; }
         public string DepartmentName { get; set; }
+
+        public Department Department { get; set; }
     }
 }

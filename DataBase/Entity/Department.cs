@@ -13,5 +13,8 @@ namespace DataBase.Entity
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string Name { get; set; }
+
+        public List<Manager> Managers { get; set; }
+        public List<Admin> Admins { get; set; }
     }
 }

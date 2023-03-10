@@ -51,7 +51,7 @@ namespace DataBase
                     RoleName = Roles.user.ToString()
                 });
             }
-
+            
             if (!dbContext.Managers.Any())
             {
                 string managerId = Guid.NewGuid().ToString();
@@ -91,7 +91,6 @@ namespace DataBase
                     RoleName = Roles.admin.ToString()
                 });
             }
-
             dbContext.SaveChanges(true);
         }
     }

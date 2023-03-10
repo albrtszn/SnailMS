@@ -14,5 +14,7 @@ namespace DataBase.Entity
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string UserId { get; set; }
         public string RoleName { get; set; }
+
+        public Role Role { get; set; }
     }
 }

@@ -1,0 +1,27 @@
+﻿@model LoginModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelper
+
+<main class="form-signin">
+<form asp-action="Login" method="post">
+    </br>
+    <h1 class="h3 mb-3 fw-normal">Пожалуйста, войдите</h1>
+    <hr class="my-4">
+    <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+
+    <div class="form-floating">
+        <input type="text" asp-for="Number" class="form-control" id="floatingInput" placeholder="+37529xxxyyzz">
+        <label asp-for="Number" for="floatingInput">Номер телефона</label>
+        <span class="badge bg-danger" asp-validation-for="Number"></span>
+    </div>
+    </br>
+
+    <div class="form-floating">
+        <input type="password" asp-for="Password" class="form-control" id="floatingPassword" placeholder="Password">
+        <label asp-for="Password" for="floatingPassword">Пароль</label>
+        <span class="badge bg-danger" asp-validation-for="Password"></span>
+    </div>
+    </br>
+
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
+</form>
+</main>

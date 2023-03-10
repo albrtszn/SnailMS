@@ -18,5 +18,8 @@ namespace DataBase.Entity
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public string ManagerId { get; set; }
+
+        public User User { get; set; }
+        public Manager Manager { get; set; }
     }
 }
