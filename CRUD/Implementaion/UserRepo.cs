@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CRUD.Interface;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CRUD.Implementaion
 {
@@ -29,12 +30,20 @@ namespace CRUD.Implementaion
 
         public IEnumerable<User> GetAllUsers()
         {
-            return context.Users.ToList();
+            IEnumerable<User> users = context.Users.ToList();
+            users.ToList().ForEach(x=> x.Password=Encoding.UTF8.GetString(System.Convert.FromBase64String(x.Password)));
+            return users;   
         }
 
         public User GetUserById(string id)
         {
-            return context.Users.FirstOrDefault(x => x.Id.Equals(id));
+            var user = context.Users.FirstOrDefault(x => x.Id.Equals(id));
+            if (user != null)
+            {
+                user.Password = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(user.Password));
+                return user;
+            }
+            return null;
         }
 
         public void SaveUser(User userToSave)
@@ -43,6 +52,7 @@ namespace CRUD.Implementaion
             {
                 DeleteUserById(userToSave.Id);
             }
+            userToSave.Password = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(userToSave.Password));
             context.Users.Add(userToSave);
             context.SaveChanges();
         }

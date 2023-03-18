@@ -9,6 +9,6 @@ namespace DataBase.Enum
     public enum Status
     {
         active = 1,
-        block = 2
+        banned = 2
     }
 }

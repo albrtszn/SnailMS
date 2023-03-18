@@ -1,0 +1,57 @@
+﻿@model UserDto
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelper
+
+<div class="container">
+<main class="form-signin">
+    <form asp-action="Register" method="post">
+        </br>
+        <h1 class="h3 mb-3 fw-normal">Пожалуйста, войдите</h1>
+        <hr class="my-4">
+        <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+
+        <div class="form-floating">
+            <input type="text" asp-for="FirstName" class="form-control" id="floatingInput" placeholder="Джойдж">
+            <label asp-for="FirstName" for="floatingInput">Имя</label>
+            <span class="badge bg-danger" asp-validation-for="FirstName"></span>
+        </div>
+        </br>
+
+        <div class="form-floating">
+            <input type="text" asp-for="SecondName" class="form-control" id="floatingInput" placeholder="Слот">
+            <label asp-for="SecondName" for="floatingInput">Фамилия</label>
+            <span class="badge bg-danger" asp-validation-for="SecondName"></span>
+        </div>
+        </br>
+
+        <div class="form-floating">
+            <input type="text" asp-for="LastName" class="form-control" id="floatingInput" placeholder="Михайлович">
+            <label asp-for="LastName" for="floatingInput">Отчество</label>
+            <span class="badge bg-danger" asp-validation-for="LastName"></span>
+        </div>
+        </br>
+
+        <div class="form-floating">
+            <input type="text" asp-for="Number" class="form-control" id="floatingInput" placeholder="+37529xxxyyzz">
+            <label asp-for="Number" for="floatingInput">Номер телефона</label>
+            <span class="badge bg-danger" asp-validation-for="Number"></span>
+        </div>
+        </br>
+
+        <div class="form-floating">
+            <input type="password" asp-for="Password" class="form-control" id="floatingPassword" placeholder="qwerty1234">
+            <label asp-for="Password" for="floatingPassword">Пароль</label>
+            <span class="badge bg-danger" asp-validation-for="Password"></span>
+        </div>
+        </br>
+
+        <div class="form-floating">
+            <input type="text" asp-for="Adress" class="form-control" id="floatingInput" placeholder="Полоцк, Замковая 15, 1">
+            <label asp-for="Adress" for="floatingInput">Адрес</label>
+            <span class="badge bg-danger" asp-validation-for="Adress"></span>
+        </div>
+        </br>
+
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Регисрация</button>
+    </form>
+</main>
+</div>

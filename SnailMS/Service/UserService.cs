@@ -67,6 +67,10 @@ namespace SnailMS.Service
         }
         public void SaveUserDto(UserDto userDtoToSave)
         {
+            if (GetUserDtoById(userDtoToSave.Id) != null)
+            {
+                DeleteUserById(userDtoToSave.Id);
+            }
             data.Users.SaveUser(ConvertDtoToUser(userDtoToSave));
         }
     }

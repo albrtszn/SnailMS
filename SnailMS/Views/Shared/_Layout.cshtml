@@ -12,6 +12,14 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.10/jquery.validate.unobtrusive.min.js"></script>
 
+
+    <style>
+        body{
+            /*background-image: url(/image/snail_logo.png);*/
+            background: linear-gradient(45deg, #EECFBA, #C5DDE8);
+            background-size:auto;
+        }
+    </style>
     
 </head>
 <body>
@@ -19,7 +27,10 @@
     <!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">-->
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <div class="container-fluid">
-                    <a class="navbar-brand" style="margin-top:-4px;" href="/">SnailMS</a>
+                    <a class="navbar-brand" style="margin-top:-4px;" href="/">
+                        <img src="/image/snail_logo1.png" style="width:30px; height:30px; filter:invert(1);" />
+                        SnailMS
+                        </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -48,6 +59,7 @@
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" asp-controller="Home" asp-action="Login">Войти</a>
                                     <a class="dropdown-item" asp-controller="Home" asp-action="Register">Регистрация</a>
+                                    
                             </li>
                         }
                         else
@@ -101,8 +113,9 @@
                     </div>
                 </div>
             </nav>
+
     
-    <div class="container">
+    <div class=""<!-- container -->
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -116,6 +129,12 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

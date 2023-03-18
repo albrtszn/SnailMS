@@ -2,7 +2,11 @@ using CRUD;
 using CRUD.Implementaion;
 using CRUD.Interface;
 using DataBase;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SnailMS.Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +36,32 @@ builder.Services.AddScoped<CallService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<Service>();
 
+// authentification
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Home/Login";
+        options.AccessDeniedPath = "/Home/accessdenied";
+    });
+/*.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+    options.RequireHttpsMetadata = true;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters { 
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = "SnailMS",
+        ValidIssuer = "SnailMSClient",
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("NoodleMonster")),
+        ValidateLifetime = true
+        //ClockSkew = TimeSpan
+    };
+});*/
+
+builder.Services.AddAuthentication();
+
+// CORS-politicy
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -51,11 +81,27 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseCors(x => x
+    .WithOrigins("htpps://localhost:7257")
+    .AllowCredentials()
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+);
+
+// cookie policy
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+    HttpOnly = HttpOnlyPolicy.Always,
+    Secure = CookieSecurePolicy.Always
+});
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

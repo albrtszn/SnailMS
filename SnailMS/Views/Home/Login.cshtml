@@ -1,6 +1,70 @@
 ﻿@model LoginModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelper
 
+
+
+<script>
+    $( function Popup(){
+        $("#popup").show();
+    });
+
+</script>
+
+<style>
+    #error-popup{
+        display:none;
+        position:fixed;
+        left:60%;
+        top: 60%;
+        
+        background:grey;
+        backgrounf-color: rgba(0,0,0,0.5);
+    }
+    #popup-close{
+        color:black;
+        float:right;
+        font-size:28px;
+        font-weight:bold;
+    }
+    .popup-close:hover{
+        color: red;
+        text-decoration:none;
+        cursor:default;
+    }
+
+    .own-popup {
+        display:block;
+
+        position: fixed;
+        left: 70%;
+        top: 70%;
+        width: 300px;
+        height: 150px;
+        padding: 10px;
+        background-color: indianred;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px #000;
+
+        text-align:center;
+        font-size:large;
+        font-style: sans-serif;
+    }
+</style>
+
+<script>
+    function popup(){
+        $("#own-popup").css("display","block");
+        $(".popup-close").click(function(){
+            $("#own-popup").fadeOut(1000);
+        });
+    });
+
+    function popup-fadeout(){
+        $("#error-popup").fadeOut(1000);
+    }
+</script>
+
+<div class="container">
 <main class="form-signin">
 <form asp-action="Login" method="post">
     </br>
@@ -9,9 +73,9 @@
     <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
 
     <div class="form-floating">
-        <input type="text" asp-for="Number" class="form-control" id="floatingInput" placeholder="+37529xxxyyzz">
-        <label asp-for="Number" for="floatingInput">Номер телефона</label>
-        <span class="badge bg-danger" asp-validation-for="Number"></span>
+        <input type="text" asp-for="Login" class="form-control" id="floatingInput" placeholder="+37529xxxyyzz">
+        <label asp-for="Login" for="floatingInput">Номер телефона</label>
+        <span class="badge bg-danger" asp-validation-for="Login"></span>
     </div>
     </br>
 
@@ -24,4 +88,16 @@
 
     <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
 </form>
+</div>
 </main>
+
+@if (@TempData["error"] != null && !@TempData["error"].ToString().Equals(""))
+{
+    <div id="error-popup" class="own-popup" >
+        <span class="popup-close" onclick="popup-fadeout()">Закрыть</span>
+        <h2>Ошибка</h2>
+        <span>@TempData["error"]</span>
+    </div>
+}
+
+

@@ -26,7 +26,7 @@
 
         public UserService Users { get { return userService; } }
         public ManagerService Managers { get { return managerService; } }
-        public AdminService Admin { get { return adminService; } }
+        public AdminService Admins { get { return adminService; } }
         //public RoleService userService;
         //public UserRoleRepoService userService;
         public TempCallService TempCalls { get { return tempCallService; } }

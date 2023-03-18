@@ -58,6 +58,10 @@ namespace SnailMS.Service
         }
         public void SaveTempCallDto(TempCallDto tempCallDtoToSave)
         {
+            if (GetTempCallDtoById(tempCallDtoToSave.Id)!=null)
+            {
+                DeleteTempCallById(tempCallDtoToSave.Id);
+            }
             data.TempCalls.SaveTempCall(ConvertDtoToTempCall(tempCallDtoToSave));
         }
     }
