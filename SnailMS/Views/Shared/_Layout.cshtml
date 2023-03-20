@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using SnailMS.Service
+@inject Service service
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -14,18 +17,15 @@
 
 
     <style>
-        body{
-            /*background-image: url(/image/snail_logo.png);*/
-            background: linear-gradient(45deg, #EECFBA, #C5DDE8);
-            background-size:auto;
-        }
+
+
     </style>
     
 </head>
 <body>
 
     <!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">-->
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color:#668E99;">
                 <div class="container-fluid">
                     <a class="navbar-brand" style="margin-top:-4px;" href="/">
                         <img src="/image/snail_logo1.png" style="width:30px; height:30px; filter:invert(1);" />
@@ -90,20 +90,22 @@
                             }if (ViewBag.role.Equals("user"))
                             {
                                 <li class="nav-item dropdown">
-                                    @{/*
-                                        var imgSrc = "/avatar.webp";
-                                        if (ViewBag.message != null)
+                                    @{
+                                        var imgSrc = "/image/avatar.webp";
+                                        if (ViewBag.userId != null)
                                         {
-                                            var base64 = Convert.ToBase64String(service.GetUserAvatar(ViewBag.message));
-                                            imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                                        }*/
+                                            if(service.Users.GetUserAvatar(ViewBag.userId)!=null){
+                                                var base64 = Convert.ToBase64String(service.Users.GetUserAvatar(ViewBag.userId));
+                                                imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                            }
+                                        }
                                     }
                                     <a class="nav-link dropdown-toggle" style="float:right; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <img src= "" alt="avatar" class="rounded-circle img-fluid" style="width: 50px;">
+                                        <img src="@imgSrc" alt="avatar" class="rounded-circle img-fluid" style="width:40px; height:40px;">
                                     </a>
-                                    <div class="dropdown-menu">
+                                    <div class="dropdown-menu" style="padding:15px;">
                                         <a class="dropdown-item" asp-controller="Home" asp-action="Account" asp-route-userId=@ViewBag.message>Аккаунт</a>
-                                        <a class="dropdown-item" asp-controller="Home" asp-action="Cart" asp-route-userId=@ViewBag.message>Корзина</a>
+                                        <a class="dropdown-item" asp-controller="Home" asp-action="Cart" asp-route-userId=@ViewBag.message>_</a>
                                         <a class="dropdown-item" style="color:red;" asp-controller="Home" asp-action="LogOut" asp-route-userId=@ViewBag.message>Выйти</a>
                                     </div>
                                 </li>

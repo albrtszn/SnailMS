@@ -6,11 +6,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace DataBase
 {
-    public static class InitDb
+    public class InitDb
     {
+        private static byte[] ImageToByteArray(string path)
+        {
+            Image pic = Image.FromFile(path);
+            using (var ms = new MemoryStream())
+            {
+                pic.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                return ms.ToArray();
+            }
+        }
+
         public static void InitData(EFDBContext dbContext)
         {
             if (!dbContext.Roles.Any())
@@ -43,7 +54,8 @@ namespace DataBase
                     EntryDate = DateTime.Parse("15:20 07.03.2023"),
                     Balance = 15.15m,
                     Status = Status.active.ToString(),
-                    Access = Access.@public.ToString()
+                    Access = Access.@public.ToString(),
+                    Picture = ImageToByteArray(@"D:\\trash_collection\\acsis3.1.jpg")
                 });
                 dbContext.UserRoles.Add(new UserRole 
                 { 

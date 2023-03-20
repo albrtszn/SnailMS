@@ -35,9 +35,9 @@ namespace CRUD.Implementaion
             return users;   
         }
 
-        public User GetUserById(string id)
+        public User? GetUserById(string id)
         {
-            var user = context.Users.FirstOrDefault(x => x.Id.Equals(id));
+            User? user = context.Users.ToList().Find(x => x.Id.Equals(id));
             if (user != null)
             {
                 user.Password = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(user.Password));

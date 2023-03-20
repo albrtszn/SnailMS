@@ -30,5 +30,6 @@ namespace SnailMS.Models
         public decimal Balance { get; set; }
         public string Status { get; set; }
         public string Access { get; set; }
+        public byte[]? Picture { get; set; }
     }
 }

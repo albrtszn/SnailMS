@@ -12,7 +12,7 @@ namespace SnailMS.Service
             data = _data;
         }
         
-        public UserDto ConvertUserToDto(User user)
+        public UserDto? ConvertUserToDto(User user)
         {
             return new UserDto 
             { 
@@ -24,7 +24,8 @@ namespace SnailMS.Service
                 Password=user.Password,
                 Adress=user.Adress,
                 EntryDate=user.EntryDate,
-                Balance=user.Balance
+                Balance=user.Balance,
+                Picture=user.Picture
             };
         }
         public User ConvertDtoToUser(UserDto userDto)
@@ -41,10 +42,29 @@ namespace SnailMS.Service
                 EntryDate = userDto.EntryDate,
                 Balance = userDto.Balance,
                 Status = userDto.Status,
-                Access = userDto.Access
+                Access = userDto.Access,
+                Picture = userDto.Picture
             };
         }
 
+        public byte[]? GetUserAvatar(string userId)
+        {
+            UserDto? userDto = GetUserDtoById(userId);
+            if (userDto != null)
+            {
+                Console.WriteLine(userDto.Picture);
+                return userDto.Picture;
+            }
+            return null;
+        }
+        public byte[] IFormFileToByteArray(IFormFile file)
+        {
+            using var fileStream = file.OpenReadStream();
+            byte[] bytes = new byte[file.Length];
+            fileStream.Read(bytes, 0, (int)file.Length);
+
+            return bytes;
+        }
         public IEnumerable<UserDto> GetAllUserDto()
         {
             List<UserDto> userDtos = new List<UserDto>();
@@ -57,9 +77,15 @@ namespace SnailMS.Service
             }
             return userDtos;
         }
-        public UserDto GetUserDtoById(string id)
+        public UserDto? GetUserDtoById(string id)
         {
-            return ConvertUserToDto(data.Users.GetUserById(id));
+            User? user = data.Users.GetUserById(id);
+            if (user != null)
+            {
+                Console.WriteLine($"get user: {user.Id}, {user.Picture.ToString}");
+                return ConvertUserToDto(data.Users.GetUserById(id));
+            }
+            return null;
         }
         public void DeleteUserById(string id)
         {

@@ -28,6 +28,7 @@ namespace DataBase.Entity
         public decimal Balance { get; set; }
         public string Status { get; set; }
         public string Access { get; set; }
+        public byte[]? Picture { get; set; }
 
         public List<Call> Calls { get; set; }
         public List<TempCall> TempCalls { get; set; }

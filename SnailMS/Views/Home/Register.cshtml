@@ -3,7 +3,7 @@
 
 <div class="container">
 <main class="form-signin">
-    <form asp-action="Register" method="post">
+        <form asp-action="Register" method="post" enctype="multipart/form-data">
         </br>
         <h1 class="h3 mb-3 fw-normal">Пожалуйста, войдите</h1>
         <hr class="my-4">
@@ -49,8 +49,11 @@
             <label asp-for="Adress" for="floatingInput">Адрес</label>
             <span class="badge bg-danger" asp-validation-for="Adress"></span>
         </div>
+        <div class="form-group">
+            <label for="formFile" class="form-label mt-4">Аватар</label>
+            <input class="form-control" type="file" name="Picture" id="formFile">
+        </div>
         </br>
-
         <button class="w-100 btn btn-lg btn-primary" type="submit">Регисрация</button>
     </form>
 </main>

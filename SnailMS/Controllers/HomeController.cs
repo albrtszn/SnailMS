@@ -32,13 +32,21 @@ namespace SnailMS.Controllers
             data = _data;
             service = _service;
         }
-
+        [HttpGet("/Home/Test/{userId}")]
+        public IActionResult Test(string userId)
+        {
+            //return View(data.Users.GetAllUsers().ToList().FirstOrDefault(x=>x.Id.Equals(userId))); 244db888-388c-43b4-ae38-b6df94dbfde5
+            return View(service.Users.GetUserDtoById(userId));
+        }
         public IActionResult Index()
         {
             if (HttpContext.User.Identity.IsAuthenticated) {
+                string userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.userId = userId;
                 string role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
                 ViewBag.role = role;
-                logger.LogInformation($"user role-> {role}");
+                //var user = service.Users.GetAllUserDto().FirstOrDefault(x => x.Id.Equals(HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value));
+                //logger.LogInformation($"user role-> {userId}:{role}");
             }
             return View();
         }
@@ -121,11 +129,19 @@ namespace SnailMS.Controllers
         [HttpPost]
         public IActionResult Register(UserDto userDto)
         {
+            logger.LogInformation($"register-> {userDto.FirstName}, {userDto.SecondName}, {userDto.LastName}, {userDto.Number}, {userDto.Adress}");
+            if (HttpContext.Request.Form.Files.Count != 0)
+            {
+                IFormFileCollection files = HttpContext.Request.Form.Files;
+                userDto.Picture = service.Users.IFormFileToByteArray(files[0]);
+                logger.LogInformation($"register picture-> {service.Users.IFormFileToByteArray(files[0])}");
+            }
             userDto.Id = Guid.NewGuid().ToString();
             userDto.Access = Access.@public.ToString();
             userDto.Status = Status.active.ToString();  
             userDto.EntryDate = DateTime.Now;
             userDto.Balance = 0.10m;
+            //logger.LogInformation($"register-> {userDto.ToString()}");
 
             service.Users.SaveUserDto(userDto);
             data.UserRoles.SaveUserRole(new UserRole() { 

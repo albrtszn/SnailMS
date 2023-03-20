@@ -10,7 +10,7 @@ namespace CRUD.Interface
     public interface IUserRepo
     {
         IEnumerable<User> GetAllUsers();
-        User GetUserById(string id);
+        User? GetUserById(string id);
         void SaveUser(User userToSave);
         void DeleteUserById(string id);
     }
