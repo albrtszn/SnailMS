@@ -1,0 +1,52 @@
+﻿
+@section Scripts {
+    <script>
+
+        function get() {
+            var text = $('#NameLabel').val();
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetUsers")",
+                dataType: "html",
+                data: { name: text },
+                success: function (result) {
+                    $("#result").html(result);
+                    alert(result);
+                }
+            });
+        }
+
+    </script>
+}
+
+<div class="container">
+        
+        </br>
+        <label for="exampleSelect1" class="form-label mt-4">ФИО</label>
+        <input style="width:200px;" type="text" name="name" placeholder="Иван" id="NameLabel" oninput="get()" />
+        </br>
+
+        <label for="exampleSelect1" class="form-label mt-4">Фильтрация</label>
+        <select class="form-select" name="filt" value="" id="Type">
+            <option>Нет</option>
+            <option value="rus">Россия(+7)</option>
+            <option value="by">Беларусь(+375)</option>
+            <option value="mts">МТС(29)</option>
+            <option value="life">LIFE(25)</option>
+            <option value="life">LIFE(25)</option>
+        </select>
+
+        <label for="exampleSelect1" class="form-label mt-4">Сортировка</label>
+        <select class="form-select" name="sort" value="" id="Type">
+            <option>Нет</option>
+            <option value="up">Алфавит↑</option>
+            <option value="down">Алфавит↓</option>
+        </select>
+
+        <input class="btn btn-primary" type="button" value="Поиск" onclick="get();" />
+        </br>
+</div>
+
+<div id="result" class="container">
+
+</div>

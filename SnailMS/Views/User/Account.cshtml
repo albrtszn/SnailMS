@@ -1,2 +1,98 @@
-﻿@model UserDto
+﻿@using SnailMS.Service
+@inject Service service
+@model UserDto
 
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Личный кабинет";
+}
+
+<section style="background-color: #eee;">
+    <div class="container py-5">
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        @{
+                            var imgSrc = "/image/avatar.webp";
+                            if (ViewBag.userId != null)
+                            {
+                                if (service.Users.GetUserAvatar(ViewBag.userId) != null)
+                                {
+                                    var base64 = Convert.ToBase64String(service.Users.GetUserAvatar(ViewBag.userId));
+                                    imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                                }
+                            }
+                        }
+                        <img src="@imgSrc" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                        <h5 class="my-3">@Model.FirstName @Model.SecondName</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Полное имя</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.FirstName @Model.SecondName @Model.LastName</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Телефон</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.Number</p>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+                        <div class="card mb-4 mb-md-0" style="width:contain;">
+                            <div class="card-body">
+                                <h5>Ваши уведомления</h5>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <td>Сообщение</td>
+                                            <td>Дата</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                @{
+                                    var notifications = service.Notifications.GetAllNotificationDto().ToList().Where(x=>x.UserId.Equals(ViewBag.userId));
+                                    if (notifications.Count()!=0)
+                                    {
+                                        foreach (var notification in notifications)
+                                        {
+                                            if (notification != null)
+                                            {
+                                                <tr>
+                                                    <td>@notification.Message</td>
+                                                    <td>@notification.Message</td>
+                                                </tr>
+                                            }
+                                        }
+                                    }else{
+                                        <tr>
+                                            <td>Ящик уведомлений пуст</td>
+                                            <td>☻</td>
+                                        </tr>
+                                    }
+                                }
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+            </div>
+        </div>
+    </div>
+</section>

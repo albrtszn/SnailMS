@@ -55,8 +55,8 @@
                         @if (ViewBag.message == null && ViewBag.role == null)
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" style=" float:right; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Войти в аккаунт</a>
-                                <div class="dropdown-menu">
+                        <a class="nav-link dropdown-toggle" style=" float:right; ; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Войти в аккаунт</a>
+                                <div class="dropdown-menu" style="">
                                     <a class="dropdown-item" asp-controller="Home" asp-action="Login">Войти</a>
                                     <a class="dropdown-item" asp-controller="Home" asp-action="Register">Регистрация</a>
                                     
@@ -68,7 +68,7 @@
                             {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" style=" float:right; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Менеджер</a>
-                                    <div class="dropdown-menu">
+                                    <div class="dropdown-menu" style="margin-left:-80%;">
                                         <a class="dropdown-item" asp-controller="Manager" asp-action="Index">Главная</a>
                                         <a class="dropdown-item" asp-controller="Manager" asp-action="Item">Товары</a>
                                         <a class="dropdown-item" asp-controller="Manager" asp-action="User">Пользователи</a>
@@ -79,7 +79,7 @@
                             {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" style=" float:right; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Админ</a>
-                                    <div class="dropdown-menu">
+                                    <div class="dropdown-menu" style="margin-left:-80%;">
                                         <a class="dropdown-item" asp-controller="Admin" asp-action="Index">Главная</a>
                                         <a class="dropdown-item" asp-controller="Admin" asp-action="Item">Товары</a>
                                         <a class="dropdown-item" asp-controller="Admin" asp-action="User">Пользователи</a>
@@ -103,9 +103,9 @@
                                     <a class="nav-link dropdown-toggle" style="float:right; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                                         <img src="@imgSrc" alt="avatar" class="rounded-circle img-fluid" style="width:40px; height:40px;">
                                     </a>
-                                    <div class="dropdown-menu" style="padding:15px;">
-                                        <a class="dropdown-item" asp-controller="Home" asp-action="Account" asp-route-userId=@ViewBag.message>Аккаунт</a>
-                                        <a class="dropdown-item" asp-controller="Home" asp-action="Cart" asp-route-userId=@ViewBag.message>_</a>
+                                    <div class="dropdown-menu" style="margin-left:-80%;">
+                                        <a class="dropdown-item" asp-controller="User" asp-action="Account">Аккаунт</a>
+                                        <a class="dropdown-item" asp-controller="User" asp-action="Users">Поиск пользователей</a>
                                         <a class="dropdown-item" style="color:red;" asp-controller="Home" asp-action="LogOut" asp-route-userId=@ViewBag.message>Выйти</a>
                                     </div>
                                 </li>
@@ -130,6 +130,8 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
