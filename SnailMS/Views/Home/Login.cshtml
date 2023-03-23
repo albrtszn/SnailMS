@@ -1,18 +1,18 @@
 ﻿@model LoginModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelper
 
-
-
+@section Scripts{
 <script>
-    $( function Popup(){
-        $("#popup").show();
-    });
+
+    function popup_close(){
+        $("#own_popup").fadeOut(1000);
+    }
 
 </script>
+}
 
 <style>
     #error-popup{
-        display:none;
         position:fixed;
         left:60%;
         top: 60%;
@@ -21,7 +21,9 @@
         backgrounf-color: rgba(0,0,0,0.5);
     }
     #popup-close{
+        cursor:default;
         color:black;
+        position:relative;
         float:right;
         font-size:28px;
         font-weight:bold;
@@ -33,10 +35,8 @@
     }
 
     .own-popup {
-        display:block;
-
-        position: fixed;
-        left: 70%;
+        position: absolute;
+        left:70%;
         top: 70%;
         width: 300px;
         height: 150px;
@@ -50,19 +50,6 @@
         font-style: sans-serif;
     }
 </style>
-
-<script>
-    function popup(){
-        $("#own-popup").css("display","block");
-        $(".popup-close").click(function(){
-            $("#own-popup").fadeOut(1000);
-        });
-    });
-
-    function popup-fadeout(){
-        $("#error-popup").fadeOut(1000);
-    }
-</script>
 
 <div class="container">
 <main class="form-signin">
@@ -88,13 +75,14 @@
 
     <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
 </form>
-</div>
 </main>
+</div>
+
 
 @if (@TempData["error"] != null && !@TempData["error"].ToString().Equals(""))
 {
-    <div id="error-popup" class="own-popup" >
-        <span class="popup-close" onclick="popup-fadeout()">Закрыть</span>
+    <div id="own_popup" class="own-popup" >
+        <span class="popup-close" onclick="popup_close()">Закрыть</span>
         <h2>Ошибка</h2>
         <span>@TempData["error"]</span>
     </div>

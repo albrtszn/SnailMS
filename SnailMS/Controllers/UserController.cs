@@ -1,7 +1,9 @@
 ﻿using CRUD;
+using DataBase.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SnailMS.Models;
+using System.Linq;
 using System.Security.Claims;
 
 namespace SnailMS.Controllers
@@ -43,13 +45,14 @@ namespace SnailMS.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult GetUsers(string name, string sortType, string filtType)// !access check
+        public IActionResult GetUsers(string name, string sort, string filt)// !access check and self find and lowcase
         {
-            logger.LogInformation($"/GetUsers -> name:{name}");
-            List<UserDto> userDtos = service.Users.GetAllUserDto().ToList();
+            logger.LogInformation($"/GetUsers -> name:{name}, sort:{sort}, filt:{filt}");
+            string userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+            List<UserDto> userDtos = service.Users.GetAllUserDto().Where(x => !x.Id.Equals(userId) && !x.Access.Equals(Access.@private.ToString()) ).ToList(); ;
             if (!string.IsNullOrEmpty(name))
             {
-                userDtos = userDtos.Where(x => x.FirstName.Contains(name) || x.SecondName.Contains(name) || x.LastName.Contains(name)).ToList();
+                userDtos = userDtos.Where(x => (x.FirstName.ToLower().Contains(name.ToLower()) || x.SecondName.ToLower().Contains(name.ToLower()) || x.LastName.ToLower().Contains(name.ToLower()) )).ToList();
             }
             return PartialView(userDtos);
         }

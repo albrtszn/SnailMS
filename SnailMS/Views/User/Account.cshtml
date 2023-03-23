@@ -27,7 +27,7 @@
                                 }
                             }
                         }
-                        <img src="@imgSrc" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                        <img src="@imgSrc" class="bd-placeholder-img" alt="avatar" style="width:350px; height:350px;  object-fit:cover;">
                         <h5 class="my-3">@Model.FirstName @Model.SecondName</h5>
                     </div>
                 </div>
@@ -53,6 +53,32 @@
                             </div>
                         </div>
                         <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Дата регистрации</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.EntryDate</p>
+                            </div>
+                        </div>
+                            <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Адрес</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.Adress</p>
+                            </div>
+                        </div>
+                            <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Статус аккаунта</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.Status</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                         <div class="card mb-4 mb-md-0" style="width:contain;">

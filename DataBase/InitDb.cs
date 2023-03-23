@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataBase
 {
@@ -24,6 +25,21 @@ namespace DataBase
 
         public static void InitData(EFDBContext dbContext)
         {
+            User user = new User()
+            {
+                Id = Guid.NewGuid().ToString(),
+                FirstName = "Феликс",
+                SecondName = "Богомолов",
+                LastName = "Наумович",
+                Number = "+375293179361",
+                Password = Convert.ToBase64String(Encoding.UTF8.GetBytes("password1234")),
+                Adress = "г. Москва, ул. Крутова 5, кв. 54",
+                EntryDate = DateTime.Parse("15:20 07.03.2023"),
+                Balance = 15.15m,
+                Status = Status.active.ToString(),
+                Access = Access.@public.ToString(),
+                Picture = ImageToByteArray(@"D:\\trash_collection\\acsis3.1.jpg")
+            };
             if (!dbContext.Roles.Any())
             {
                 dbContext.Roles.Add(new Role { Name=Roles.user.ToString()});
@@ -41,8 +57,7 @@ namespace DataBase
 
             if (!dbContext.Users.Any())
             {
-                string userId = Guid.NewGuid().ToString();
-                dbContext.Users.Add(new User
+                /*dbContext.Users.Add(new User
                 {
                     Id = userId,
                     FirstName = "Феликс",
@@ -56,10 +71,11 @@ namespace DataBase
                     Status = Status.active.ToString(),
                     Access = Access.@public.ToString(),
                     Picture = ImageToByteArray(@"D:\\trash_collection\\acsis3.1.jpg")
-                });
+                });*/
+                dbContext.Users.Add(user);
                 dbContext.UserRoles.Add(new UserRole 
                 { 
-                    UserId = userId,
+                    UserId = user.Id,
                     RoleName = Roles.user.ToString()
                 });
             }
@@ -103,6 +119,21 @@ namespace DataBase
                     RoleName = Roles.admin.ToString()
                 });
             }
+            //dbContext.SaveChanges(true);
+
+            if (!dbContext.TempCalls.Any())
+            {
+                dbContext.TempCalls.Add(new TempCall
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = dbContext.Users.Include(x => x.Id).ToString(),
+                    Number = "+375293179362",
+                    StartTime = DateTime.Parse("23.03.2023 9:45:00"),
+                    EndTime = DateTime.Parse("23.03.2023 10:00:00"),
+                    User = user
+                });
+            }
+
             dbContext.SaveChanges(true);
         }
     }

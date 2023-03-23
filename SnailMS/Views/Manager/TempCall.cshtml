@@ -1,2 +1,182 @@
 ﻿@model IEnumerable<TempCallDto>
 
+<script>
+    // Save TempCall Form
+    function save_form_open(Id, UserId, Number, StartTime, EndTime) {
+        $("#TempCallId").val(Id);
+        $("#TempCallUserId").val(UserId);
+        $("#TempCallNumber").val(Number);
+        $("#TempCallStartTime").val(StartTime);
+        $("#TempCallEndTime").val(EndTime);
+        alert(Id+' '+UserId+' '+Number+' '+StartTime+' '+EndTime);
+
+        $("#exampleModalCenter").modal('show');
+    }
+    function save_form_close() {
+        $("#exampleModalCenter").modal('hide');
+    }
+    function save_form_confirm(){
+        alert('id=' + $('#TempCallId').val() + 'ManagerId=' + $('#TempCallManagerId').val());
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AddCall")",
+            dataType: "text", // ? text or html 
+            data: {
+                Id: $('#TempCallId').val(),
+                UserId: $('#TempCallUserId').val(),
+                Number: $('#TempCallNumber').val(),
+                StartTime: $('#TempCallStartTime').val(),
+                EndTime: $('#TempCallEndTime').val(),
+                ManagerId: $('#TempCallManagerId').val()
+            },
+            success: function (result) {
+                $("#error_handler").html(result);
+                alert(result);
+            }
+        });
+        //$("#DeleteTempCallId").val($('#TempCallId').val());
+        delete_form_confirm();
+        //$("#exampleModalCenter").modal('hide');
+    }
+
+    // Delete TempCall Form
+    function delete_form_open(Id) {
+        $("#DeleteTempCallId").val(Id);
+        $("#DeleteModal").modal('show');
+    }
+    function delete_form_close() {
+        $("#DeleteModal").modal('hide');
+    }
+    function delete_form_confirm() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeleteTempCall")",
+            dataType: "text", // ? text or html
+            data: {
+                callDtoId: $('#DeleteTempCallId').val()
+            },
+            success: function (result) {
+                $("#error_handler").html(result);
+                alert(result);
+            }
+        });
+
+        //$("#DeleteModal").modal('hide');
+    }
+</script>
+
+<!-- Save Form Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Сохранение звонка в БД</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="save_form_close()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3 style="color:red;" id="error_handler"></h3>
+                <input type="hidden" id="TempCallId"/>
+                <input type="hidden" id="TempCallManagerId" value="@ViewBag.userId"/>
+
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="TempCallUserId" placeholder="">
+                    <label for="floatingInput">Id пользователя</label>
+                    <span class="badge bg-danger"></span>
+                </div>
+                </br>
+
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="TempCallNumber" placeholder="">
+                    <label for="floatingInput">Номер вызываемого пользователя</label>
+                    <span class="badge bg-danger"></span>
+                </div>
+                </br>
+
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="TempCallStartTime" placeholder="">
+                    <label for="floatingInput">Дата начала звонка</label>
+                    <span class="badge bg-danger"></span>
+                </div>
+                </br>
+
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="TempCallEndTime" placeholder="">
+                    <label for="floatingInput">Дата конца звонка</label>
+                    <span class="badge bg-danger"></span>
+                </div>
+                </br>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="save_form_close()">Закрыть</button>
+                <button type="button" class="btn btn-primary" onclick="save_form_confirm()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Form Modal-->
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Удаление записи на добовление в БД</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="delete_form_close()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3 style="color:red;" id="error_handler"></h3>
+                <h3 style="color:dimgrey;">Вы уверены, что хотите удалить эту запись?</h3>
+
+                <input type="hidden" id="DeleteTempCallId"/>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delete_form_close()">Закрыть</button>
+                <button type="button" class="btn btn-primary" onclick="delete_form_confirm()">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="container">
+<div class="card-body">
+    <h5>Заявки звонков на добовление в БД</h5>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <td>Идентификатор пользователя</td>
+                <td>Вызываемый номер</td>
+                <td>Дата начала звонка</td>
+                <td>Дата окончания звонка</td>
+                <td>Действия</td>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach(TempCallDto tempCallDto in Model){
+                                              <tr>
+                                                     <td>@tempCallDto.UserId</td>
+                                                     <td>@tempCallDto.Number</td>
+                                                     <td>@tempCallDto.StartTime</td>
+                                                     <td>@tempCallDto.EndTime</td>
+                                                     <td>
+                                                         <!-- Save Button trigger modal -->
+                                                        <button type="button" class="btn btn-primary" style="width:150px;" data-toggle="modal" data-target="#exampleModalCenter" onclick="save_form_open('@tempCallDto.Id','@tempCallDto.UserId','@tempCallDto.Number','@tempCallDto.StartTime','@tempCallDto.EndTime')">
+                                                             Сохранить                                                                                                       
+                                                         </button>     
+                                                         <!-- Delete Button trigger modal -->
+                                                         <button type="button" class="btn btn-danger" style="width:150px;" data-toggle="modal" data-target="#DeleteModal" onclick="delete_form_open('@tempCallDto.Id')">
+                                                             Удалить                                                                                                       
+                                                         </button>
+                                                     </td>                                                                                                                           
+                                              </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+</div>

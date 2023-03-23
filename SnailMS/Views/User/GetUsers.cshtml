@@ -1,4 +1,6 @@
-﻿@model List<UserDto>
+﻿@using SnailMS.Service
+@inject Service service
+@model List<UserDto>
 
 <div class="container">
     <div class="row mb-2">
@@ -13,8 +15,16 @@
                     <a href="#" class="stretched-link">Позвонить</a>
                 </div>
                 <div class="col-auto d-none d-lg-block">
-                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Эскиз" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Эскиз</text></svg>
-
+                        @{
+                            var imgSrc = "/image/avatar.webp";
+                             if (service.Users.GetUserAvatar(userDto.Id) != null)
+                             {
+                                    var base64 = Convert.ToBase64String(service.Users.GetUserAvatar(userDto.Id));
+                                    imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                             }
+                            //<svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Эскиз" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Эскиз</text></svg>
+                        }
+                        <img src="@imgSrc" class="bd-placeholder-img" alt="avatar" style="width:200px; height:250px;  object-fit:cover;">
                 </div>
             </div>
         </div>

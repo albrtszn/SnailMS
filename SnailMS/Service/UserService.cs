@@ -25,6 +25,8 @@ namespace SnailMS.Service
                 Adress=user.Adress,
                 EntryDate=user.EntryDate,
                 Balance=user.Balance,
+                Status=user.Status,
+                Access=user.Access, 
                 Picture=user.Picture
             };
         }

@@ -1,7 +1,9 @@
 ﻿using CRUD;
+using DataBase.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SnailMS.Models;
+using System.Security.Claims;
 using System.Xml.Serialization;
 
 namespace SnailMS.Controllers
@@ -32,30 +34,26 @@ namespace SnailMS.Controllers
         [HttpGet("/Manager/TempCall")]
         public IActionResult TempCall()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
             return View(service.TempCalls.GetAllTempCallDto());
         }
-        [HttpGet("/Manager/TempCall/Edit/{id}")]
-        public IActionResult EditTempCall(string tempCallId)
+        [HttpPost("/Manager/TempCall/Delete")]
+        public IActionResult DeleteTempCall(String callDtoId) // check on possible
         {
-            return View(service.TempCalls.GetTempCallDtoById(tempCallId));
+            logger.LogInformation($"/TempCall/Delete -> {callDtoId}");
+            return Content("Удаление успешно");//View(service.TempCalls.GetTempCallDtoById(callDtoId));
         }
-        [HttpPost("/Manager/TempCall/Edit/{id}")]
-        public IActionResult EditTempCall(TempCallDto editTempCallDto)
+        [HttpPost("/Manager/TempCall/Add")]
+        public IActionResult AddCall(CallDto callDtoToSave) // check on possible and refresh in js
         {
-            service.TempCalls.SaveTempCallDto(editTempCallDto);
-            return Redirect("/Manager/TempCall");
-        }
-        [HttpGet("/Manager/TempCall/Add/{id}")]
-        public IActionResult AddCall(string tempCallId)
-        {
-            return View(service.TempCalls.GetTempCallDtoById(tempCallId));
-        }
-        [HttpPost("/Manager/TempCall/Add/{id}")]
-        public IActionResult AddCall(CallDto callDtoToSave)
-        {
-            service.TempCalls.DeleteTempCallById(callDtoToSave.Id);
-            service.Calls.SaveCallDto(callDtoToSave);
-            return Redirect("/Manager/TempCall");
+            logger.LogInformation($"/TempCall/Add -> {callDtoToSave.Id}, {callDtoToSave.UserId}, {callDtoToSave.Number}, {callDtoToSave.StartTime}, {callDtoToSave.EndTime}, {callDtoToSave.ManagerId}");
+            //service.TempCalls.DeleteTempCallById(callDtoToSave.Id);
+            //service.Calls.SaveCallDto(callDtoToSave);
+            return Content("Запись добавлена");
         }
 
         /*

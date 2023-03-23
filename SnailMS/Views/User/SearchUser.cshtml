@@ -4,11 +4,15 @@
 
         function get() {
             var text = $('#NameLabel').val();
+            var filt = $('#filtType').val();
+            var sort = $('#sortType').val();
             $.ajax({
                 type: "GET",
                 url: "@Url.Action("GetUsers")",
                 dataType: "html",
-                data: { name: text },
+                data: { name: text,
+                        filt: filt,
+                        sort: sort},
                 success: function (result) {
                     $("#result").html(result);
                     alert(result);
@@ -18,16 +22,20 @@
 
     </script>
 }
-
 <div class="container">
+    <div class="bg-light p-5 rounded">
+        <h1>Поиск пользователей</h1>
+        <p class="lead">Не бойтесь заводить друзей. Иначе зачем вы здесь?</p>
         
+        <div class="inputs" style="display:inline-block;">
         </br>
-        <label for="exampleSelect1" class="form-label mt-4">ФИО</label>
-        <input style="width:200px;" type="text" name="name" placeholder="Иван" id="NameLabel" oninput="get()" />
+        <input style="width:200px;" type="text" name="name" placeholder="ФИО пользователя" id="NameLabel" oninput="get()" />
         </br>
+        </div>
 
+        <div class="inputs" style="display:inline-block;">
         <label for="exampleSelect1" class="form-label mt-4">Фильтрация</label>
-        <select class="form-select" name="filt" value="" id="Type">
+            <select class="form-select" style="width:200px;" name="filt" value="" id="filtType" onchange="get()">
             <option>Нет</option>
             <option value="rus">Россия(+7)</option>
             <option value="by">Беларусь(+375)</option>
@@ -35,18 +43,21 @@
             <option value="life">LIFE(25)</option>
             <option value="life">LIFE(25)</option>
         </select>
+        </div>
 
+        <div class="inputs" style="display:inline-block;">
         <label for="exampleSelect1" class="form-label mt-4">Сортировка</label>
-        <select class="form-select" name="sort" value="" id="Type">
+            <select class="form-select" style="width:200px;" name="sort" value="" id="sortType" onchange="get()">
             <option>Нет</option>
             <option value="up">Алфавит↑</option>
             <option value="down">Алфавит↓</option>
         </select>
+        </div>
 
-        <input class="btn btn-primary" type="button" value="Поиск" onclick="get();" />
         </br>
+        </br>
+</div>
 </div>
 
 <div id="result" class="container">
-
 </div>
