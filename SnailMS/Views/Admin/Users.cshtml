@@ -1,0 +1,270 @@
+﻿@model IEnumerable<UserDto>
+
+@section Scripts{
+    <script>
+    // Edit UserDto Form
+    function edit_form_open(Id, FirstName, SecondName, LastName,
+                            Number, Password, Adress, EntryDate,
+                            Balance, Status, Access, Picture){
+        $("#UserDtoId").val(Id);
+        $("#UserDtoFirstName").val(FirstName);
+        $("#UserDtoSecondName").val(SecondName);
+        $("#UserDtoLastName").val(LastName);
+        $("#UserDtoNumber").val(Number);
+        $("#UserDtoPassword").val(Password);
+        $("#UserDtoAdress").val(Adress);
+        $("#UserDtoEntryDate").val(EntryDate);
+        $("#UserDtoBalance").val(Balance);
+        $("#UserDtoStatus").val(Status);
+        $("#UserDtoAccess").val(Access);
+
+
+        alert(Id+' '+FirstName+' '+SecondName+' '+LastName+' '+Number+' '+Picture);
+        $("#EditModal").modal('show');
+    }
+    function edit_form_confirm(){
+         $.ajax({
+            type: "POST",
+                url: "@Url.Action("EditUser")",
+            dataType: "text", // ? text or html 
+            data: {
+                Id: $('#UserDtoId').val(),
+                FirstName: $('#UserDtoFirstName').val(),
+                SecondName: $('#UserDtoSecondName').val(),
+                LastName: $('#UserDtoLastName').val(),
+                Number: $('#UserDtoNumber').val(),
+                Password: $('#UserDtoPassword').val(),
+                Adress: $('#UserDtoAdress').val(),
+                EntryDate: $('#UserDtoEntryDate').val(),
+                Balance: $('#UserDtoBalance').val(),
+                Status: $('#UserDtoStatus').val(),
+                Access: $('#UserDtoAccess').val(),
+                Picture: $('#UserDtoPicture')
+            },
+            success: function (result) {
+                $("#error_handler").html(result);
+                alert(result);
+            }
+        });
+    }
+    function edit_form_close(){
+        $("#EditModal").modal('hide');
+    }
+    // Delete UserDto Form
+    function remove_form_open(userId){
+        $("#DeleteModal").modal('show');
+        $("#deleteUserId").val(userId);
+    }
+    function remove_form_confirm(){
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteUser")",
+                dataType: "text", // ? text or html
+                data: {
+                    userId: $('#UserDtoId').val()
+                },
+                success: function (result) {
+                    $("#error_handler").html(result);
+                    alert(result);
+                }
+            });
+    }
+    function remove_form_close(){
+        $("#DeleteModal").modal('hide');
+    }
+    </script>
+}
+
+<!-- Edit Form Modal -->
+<div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Сохранение звонка в БД</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="edit_form_close()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h3 style="color:red;" id="error_handler"></h3>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoId" placeholder="">
+                        <label for="floatingInput">Id пользователя</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <!-- Image -->
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoFirstName" placeholder="">
+                        <label for="floatingInput">Id пользователя</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoSecondName" placeholder="">
+                        <label for="floatingInput">Имя</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoLastName" placeholder="">
+                        <label for="floatingInput">Фамилия</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoNumber" placeholder="">
+                        <label for="floatingInput">Отчество</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoPassword" placeholder="">
+                        <label for="floatingInput">Пароль</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoAdress" placeholder="">
+                        <label for="floatingInput">Адрес</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoEntryDate" placeholder="">
+                        <label for="floatingInput">Дата регистрации</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoBalance" placeholder="">
+                        <label for="floatingInput">Баланс</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoStatus" placeholder="">
+                        <label for="floatingInput">Статус аккаунта</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoAccess" placeholder="">
+                        <label for="floatingInput">Доступ аккаунта</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="edit_form_close()">Закрыть</button>
+                    <button type="button" class="btn btn-primary" onclick="save_form_confirm()">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Delete Form Modal -->
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Сохранение звонка в БД</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="remove_form_close()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h3 style="color:red;" id="error_handler"></h3>
+
+                    <h2>Вы уверены, что хотите удалить пользователя?</h2>
+                    <input type="hidden" id="deleteUserId"/>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="remove_form_close()">Закрыть</button>
+                    <button type="button" class="btn btn-primary" onclick="delete_form_confirm()">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="container">
+    <div class="card-body">
+        <h5>Заявки звонков на добовление в БД</h5>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <td>Идентификатор пользователя</td>
+                    <td>Аватар</td>
+                    <td>Имя</td>
+                    <td>Фамилия</td>
+                    <td>Отчество</td>
+                    <td>Номер</td>
+                    <td>Пароль</td>
+                    <td>Адрес</td>
+                    <td>Дата регистрации</td>
+                    <td>Баланс</td>
+                    <td>Статус</td>
+                    <td>Доступ</td>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (UserDto userDto in Model)
+                    {
+                                                <tr>
+                                                    <td>@userDto.Id</td>
+                                                    <td>
+                                                        @{
+                        var imgSrc = "/image/avatar.webp";
+                        if (ViewBag.userId != null)
+                        {
+                            if (userDto.Picture != null)
+                            {
+                                var base64 = Convert.ToBase64String(userDto.Picture);
+                                imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                            }
+                        }
+                                                        }
+                                                        <img src="@imgSrc" class="bd-placeholder-img" alt="avatar" style="width:150px; height:150px;  object-fit:cover;">
+                                                    </td>
+                                                    <td>@userDto.FirstName</td>
+                                                    <td>@userDto.SecondName</td>
+                                                    <td>@userDto.LastName</td>
+                                                    <td>@userDto.Number</td>
+                                                    <td>@userDto.Password</td>
+                                                    <td>@userDto.Adress</td>
+                                                    <td>@userDto.EntryDate</td>
+                                                    <td>@userDto.Balance</td>
+                                                    <td>@userDto.Status</td>
+                                                    <td>@userDto.Access</td>
+                                                    <td>
+                                                    <!-- Save Button trigger modal       Id, FirstName, SecondName, LastName,Number, Password, Adress, EntryDate, Balance, Status, Access, Picture -->
+                                                    <button type="button" class="btn btn-primary" style="width:150px;" data-toggle="modal" data-target="#EditModal" onclick="edit_form_open('@userDto.Id', '@userDto.FirstName', '@userDto.SecondName', '@userDto.LastName','@userDto.Number', '@userDto.Password', '@userDto.Adress', '@userDto.EntryDate', '@userDto.Balance', '@userDto.Status', '@userDto.Access', '@userDto.Picture')">
+                                                            Сохранить
+                                                        </button>
+                                                        <!-- Delete Button trigger modal -->
+                                <button type="button" class="btn btn-danger" style="width:150px;" data-toggle="modal" data-target="#DeleteModal" onclick="remove_form_open('@userDto.Id')">
+                                                            Удалить
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

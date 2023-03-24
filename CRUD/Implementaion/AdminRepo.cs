@@ -29,7 +29,12 @@ namespace CRUD.Implementaion
 
         public IEnumerable<Admin> GetAllAdmins()
         {
-            return context.Admins.ToList();
+            IEnumerable<Admin> admins = context.Admins;
+            if (admins.Count() != 0)
+            {
+                admins.ToList().ForEach(x => x.Password = Encoding.UTF8.GetString(System.Convert.FromBase64String(x.Password)));
+            }
+            return admins.ToList();
         }
 
         public Admin GetAdminById(string id)

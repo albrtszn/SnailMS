@@ -25,16 +25,11 @@ namespace SnailMS.Controllers
          *      User
          */
         [HttpGet("/Admin/User")]
-        public IActionResult User()
+        public IActionResult Users()
         {
             return View(service.Users.GetAllUserDto());
         }
-        [HttpGet("/Admin/User/Edit/{id}")]
-        public IActionResult EditUser(string userId)
-        {
-            return View(service.Users.GetUserDtoById(userId));
-        }
-        [HttpPost("/Admin/User/Edit/{id}")]
+        [HttpPost("/Admin/User/Edit")]
         public IActionResult EditUser(UserDto editUserDto)
         {
             return Redirect("/Admin/User");
