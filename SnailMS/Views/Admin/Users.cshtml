@@ -75,6 +75,13 @@
     </script>
 }
 
+<style>
+    .bd-placeholder-img:hover{
+            transform: scale(5);
+            transition: 1s;
+    }
+</style>
+
 <!-- Edit Form Modal -->
 <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -225,43 +232,40 @@
                 @{
                     foreach (UserDto userDto in Model)
                     {
-                                                <tr>
-                                                    <td>@userDto.Id</td>
-                                                    <td>
-                                                        @{
+                               <tr>
+                                   <td>@userDto.Id</td>
+                               <td>
+                              @{
                         var imgSrc = "/image/avatar.webp";
-                        if (ViewBag.userId != null)
-                        {
                             if (userDto.Picture != null)
                             {
                                 var base64 = Convert.ToBase64String(userDto.Picture);
                                 imgSrc = String.Format("data:image/gif;base64,{0}", base64);
                             }
-                        }
-                                                        }
-                                                        <img src="@imgSrc" class="bd-placeholder-img" alt="avatar" style="width:150px; height:150px;  object-fit:cover;">
-                                                    </td>
-                                                    <td>@userDto.FirstName</td>
-                                                    <td>@userDto.SecondName</td>
-                                                    <td>@userDto.LastName</td>
-                                                    <td>@userDto.Number</td>
-                                                    <td>@userDto.Password</td>
-                                                    <td>@userDto.Adress</td>
-                                                    <td>@userDto.EntryDate</td>
-                                                    <td>@userDto.Balance</td>
-                                                    <td>@userDto.Status</td>
-                                                    <td>@userDto.Access</td>
-                                                    <td>
-                                                    <!-- Save Button trigger modal       Id, FirstName, SecondName, LastName,Number, Password, Adress, EntryDate, Balance, Status, Access, Picture -->
-                                                    <button type="button" class="btn btn-primary" style="width:150px;" data-toggle="modal" data-target="#EditModal" onclick="edit_form_open('@userDto.Id', '@userDto.FirstName', '@userDto.SecondName', '@userDto.LastName','@userDto.Number', '@userDto.Password', '@userDto.Adress', '@userDto.EntryDate', '@userDto.Balance', '@userDto.Status', '@userDto.Access', '@userDto.Picture')">
-                                                            Сохранить
-                                                        </button>
-                                                        <!-- Delete Button trigger modal -->
-                                <button type="button" class="btn btn-danger" style="width:150px;" data-toggle="modal" data-target="#DeleteModal" onclick="remove_form_open('@userDto.Id')">
-                                                            Удалить
-                                                        </button>
-                                                    </td>
-                                                </tr>
+                               }
+                                                                <img src="@imgSrc" class="bd-placeholder-img" alt="avatar" style="width:35px; height:35px;  object-fit:cover;">
+                                                            </td>
+                                                            <td>@userDto.FirstName</td>
+                                                            <td>@userDto.SecondName</td>
+                                                            <td>@userDto.LastName</td>
+                                                            <td>@userDto.Number</td>
+                                                            <td>@userDto.Password</td>
+                                                            <td>@userDto.Adress</td>
+                                                            <td>@userDto.EntryDate</td>
+                                                            <td>@userDto.Balance</td>
+                                                            <td>@userDto.Status</td>
+                                                            <td>@userDto.Access</td>
+                                                            <td>
+                                                            <!-- Save Button trigger modal       Id, FirstName, SecondName, LastName,Number, Password, Adress, EntryDate, Balance, Status, Access, Picture -->
+                                                            <button type="button" class="btn btn-primary" style="width:150px;" data-toggle="modal" data-target="#EditModal" onclick="edit_form_open('@userDto.Id', '@userDto.FirstName', '@userDto.SecondName', '@userDto.LastName','@userDto.Number', '@userDto.Password', '@userDto.Adress', '@userDto.EntryDate', '@userDto.Balance', '@userDto.Status', '@userDto.Access', '@userDto.Picture')">
+                                                                    Сохранить
+                                                                </button>
+                                                                <!-- Delete Button trigger modal -->
+                                        <button type="button" class="btn btn-danger" style="width:150px;" data-toggle="modal" data-target="#DeleteModal" onclick="remove_form_open('@userDto.Id')">
+                                                                    Удалить
+                                                                </button>
+                                                            </td>
+                                                        </tr>
                     }
                 }
             </tbody>

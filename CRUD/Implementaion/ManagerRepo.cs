@@ -38,7 +38,7 @@ namespace CRUD.Implementaion
         {
             Manager manager = context.Managers.FirstOrDefault(x => x.Id.Equals(id));
             manager.Password = Encoding.UTF8.GetString(System.Convert.FromBase64String(manager.Password));
-            return context.Managers.FirstOrDefault(x => x.Id.Equals(id));
+            return manager;
         }
 
         public void SaveManager(Manager managerToSave)

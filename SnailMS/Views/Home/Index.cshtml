@@ -30,19 +30,185 @@
 
 </style>
 
-    <div class="panel" id="panel">
-		<div class="container" style="color:white;">
+	<!-- 3d Model using Three.js -->
+	<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.139.0/build/three.module.js",
+                "OrbitControls": "https://unpkg.com/three@0.139.0/examples/jsm/controls/OrbitControls.js",
+                "GLTFLoader": "https://unpkg.com/three@0.139.0/examples/jsm/loaders/GLTFLoader.js",
+                "RectAreaLightHelper": "https://unpkg.com/three@0.139.0/examples/jsm/helpers/RectAreaLightHelper.js",
+                "RectAreaLightUniformsLib": "https://unpkg.com/three@0.139.0/examples/jsm/lights/RectAreaLightUniformsLib.js"
+            }
+        }
+    </script>
+
+<script type="module">
+
+    import * as THREE from 'three';
+    import { OrbitControls } from 'OrbitControls';
+    import { GLTFLoader } from 'GLTFLoader';
+    import { RectAreaLightHelper } from 'RectAreaLightHelper'
+    import { RectAreaLightUniformsLib } from 'RectAreaLightUniformsLib';
+
+    function init() {
+        let container = document.querySelector('.Scene');
+
+        //Scene
+        const scene = new THREE.Scene()
+        scene.background = new THREE.Color("#ffffff");
+        //scene.background = new THREE.Color("#E2DFE1");
+
+        //Camera
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
+        camera.position.set(0, 6, 1);
+        //camera.position.set(3, 6, -2);
+        //camera.lookAt(10, 5, 50);
+        var v = new THREE.Vector3(0, 0, 1000);
+        camera.lookAt(v);
+
+        //render
+        const renderer = new THREE.WebGLRenderer({ antialias: true })
+        renderer.setSize(window.innerWidth, window.innerHeight, false);
+        container.appendChild(renderer.domElement);
+
+        let plain;
+        {
+            plain = new THREE.Mesh(
+                new THREE.PlaneGeometry(1000, 1000),
+                new THREE.MeshBasicMaterial({ })//color: "#CCC7C6" })
+            )
+            plain.reciveShadow = true;
+            plain.position.set(0, -1, 0)
+            plain.rotateX(-Math.PI / 2);
+            scene.add(plain)
+        }
+
+        // Model
+        {
+            const loader = new GLTFLoader();
+            loader.load('./3d/Right+Left_Snails3.json', gltf => {
+                scene.add(gltf.scene);
+                gltf.scene.position.set(5, 0, 0);
+                //gltf.position.set(100,100,100);
+            },
+                function (error) {
+                    console.log('Error: ' + error)
+                }
+            )
+        }
+
+        {
+            /*const light = new THREE.DirectionalLight(0xffffff, 1)
+            light.position.set(-2, 0, 10)
+            light.lookAt(0, -1, 0)
+            scene.add(light)*/
+
+            // Helper
+            // const helper = new THREE.DirectionalLightHelper(light, 5)
+            // scene.add(helper)
+        }
+
+        {
+            /*const light = new THREE.DirectionalLight(0xE8CF3C, 1)
+            light.position.set(2, 0, 5)
+            light.lookAt(0, 1, 0)
+            scene.add(light)*/
+
+            // Helper
+            // const helper = new THREE.DirectionalLightHelper(light, 5)
+            // scene.add(helper)
+        }
+
+        RectAreaLightUniformsLib.init();
+        {
+            const rectLight = new THREE.RectAreaLight(0xffffff, 1, 100, 100);
+            rectLight.position.set(-10, 0, 0)
+            rectLight.rotation.y = Math.PI + Math.PI / 4;
+            scene.add(rectLight)
+        }
+
+        {
+            const rectLight = new THREE.RectAreaLight(0xffffff, 1, 100, 100);
+            rectLight.position.set(10, 0, 3);
+            rectLight.rotation.y = Math.PI - Math.PI / 4;
+            scene.add(rectLight);
+        }
+
+        //OrbitControls
+        const controls = new OrbitControls(camera, renderer.domElement);
+        //controls.autoRotate = true;
+        //controls.autoRotateSpeed = 5;
+        controls.enableDamping = true;
+
+        controls.object.position.set(0, 3, 5);
+        controls.target = new THREE.Vector3(1, 0, -5);
+
+        //Resize
+        window.addEventListener('resize', onWindowResize, false)
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight)
+        }
+
+        // Animate
+        function animate() {
+            requestAnimationFrame(animate)
+            controls.update();
+
+            renderer.render(scene, camera)
+        }
+        animate()
+
+    }
+
+    init()
+</script>
+
+<style>
+    .Scene{
+        display: flex;
+        justify-content: center;
+    }
+    canvas{
+        width:100%; 
+        position: relative;
+    }
+    #info {
+        position: absolute;
+        top: 200px;
+        text-align: center;
+        z-index: 100;
+        display: block;
+    }
+</style>
+
+
+<div class="Scene" id="3dModel">
+    <div id="info" class="text-white bg-dark rounded-3" style="padding: 25px 25px 25px 25px;">
+        <h2>Современный справочный ресурс</h2>
+        <p>Для использования этого сервиса обратитесь в наше отделение и предъявите паспорт.</p>
+    </div>
+</div>
+
+<div class="panel" id="panel">
+
+    <div class="container" style="color:white;">
         <img src="/image/index1-.png" style="width:409.2px; height:409.2px; float:right; padding:10px; position:relative;" />
-		<div class="container-fluid py-5" id="panel">
+        <div class="container-fluid py-5" id="panel">
             <h1 class="display-5 fw-bold">Удобный сервис с быстрым откликом</h1>
             <p class="col-md-8 fs-4">Работаем c 2023, 123 пользователей уже с нами</p>
-			<h1>@ViewBag.userId</h1>
+            <h1>@ViewBag.userId</h1>
             <button class="btn btn-primary btn-lg" type="button">Регистрация</button>
         </div>
-		</div>
-	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#fff" fill-opacity="1" d="M0,128L34.3,128C68.6,128,137,128,206,144C274.3,160,343,192,411,181.3C480,171,549,117,617,106.7C685.7,96,754,128,823,149.3C891.4,171,960,181,1029,197.3C1097.1,213,1166,235,1234,218.7C1302.9,203,1371,149,1406,122.7L1440,96L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"></path></svg>
-	</div>
-
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#fff" fill-opacity="1" d="M0,128L34.3,128C68.6,128,137,128,206,144C274.3,160,343,192,411,181.3C480,171,549,117,617,106.7C685.7,96,754,128,823,149.3C891.4,171,960,181,1029,197.3C1097.1,213,1166,235,1234,218.7C1302.9,203,1371,149,1406,122.7L1440,96L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"></path></svg>
+</div>
 
 <div class="container">
     <section class="pb-3">
@@ -100,5 +266,5 @@
     </div>
 
 <div class="line-texture">
-	<h1>Присоединяйся и поробуй.</br> Тебе понравится!</h1>
+	<h1>Присоединяйся и попробуй.</br> Тебе понравится!</h1>
 </div>

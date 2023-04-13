@@ -27,6 +27,7 @@ namespace DataBase
 
     }
 
+
     public class EFDBContextFactory : IDesignTimeDbContextFactory<EFDBContext>
     {
         public EFDBContext CreateDbContext(string[] args)
