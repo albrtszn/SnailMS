@@ -32,9 +32,6 @@
                     <div class="collapse navbar-collapse" id="navbarColor01">
                         <ul class="navbar-nav me-auto" style="text-align:right;">
                             <li class="nav-item">
-                                <a class="nav-link" href="/Home/Menu">Меню</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link" href="/Home/Feedback">Отзывы</a>
                             </li>
                             <li class="nav-item">
@@ -53,8 +50,6 @@
                         <a class="nav-link dropdown-toggle" style=" float:right; ; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Войти в аккаунт</a>
                                 <div class="dropdown-menu" style="">
                                     <a class="dropdown-item" asp-controller="Home" asp-action="Login">Войти</a>
-                                    <a class="dropdown-item" asp-controller="Home" asp-action="Register">Регистрация</a>
-                                    
                             </li>
                         }
                         else
@@ -66,7 +61,6 @@
                                     <div class="dropdown-menu" style="margin-left:-80%;">
                                         <a class="dropdown-item" asp-controller="Manager" asp-action="Index">Главная</a>
                                         <a class="dropdown-item" asp-controller="Manager" asp-action="TempCall">Заявки звонков</a>
-                                        <a class="dropdown-item" asp-controller="Manager" asp-action="Call">Звонки</a>
                                         <a class="dropdown-item" asp-controller="Home" asp-action="LogOut">Выйти</a>
                                 </li>
                             }
@@ -76,10 +70,11 @@
                                     <a class="nav-link dropdown-toggle" style=" float:right; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Админ</a>
                                     <div class="dropdown-menu" style="margin-left:-80%;">
                                         <a class="dropdown-item" asp-controller="Admin" asp-action="Index">Главная</a>
-                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Item">Товары</a>
                                         <a class="dropdown-item" asp-controller="Admin" asp-action="User">Пользователи</a>
                                         <a class="dropdown-item" asp-controller="Admin" asp-action="Managers">Менеджеры</a>
-                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Role">Роли</a>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Admins">Администраторы</a>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Call">Звонки</a>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Notifications">Уведомления</a>
                                         <a class="dropdown-item" asp-controller="Home" asp-action="LogOut">Выйти</a>
                                 </li>
                             }if (ViewBag.role.Equals("user"))

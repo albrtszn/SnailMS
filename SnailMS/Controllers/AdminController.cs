@@ -30,6 +30,11 @@ namespace SnailMS.Controllers
         {
             return View(service.Users.GetAllUserDto());
         }
+        [HttpGet("/Admin/GetUsers")]
+        public IActionResult GetUsers(string fio, string number, string sortType, string filtType)
+        {
+            return PartialView(service.Users.GetAllUserDto());
+        }
         [HttpPost("/Admin/User/Edit")]
         public IActionResult EditUser(UserDto editUserDto)
         {

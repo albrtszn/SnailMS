@@ -2,6 +2,7 @@
 using DataBase.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using SnailMS.Models;
 using System.Linq;
 using System.Security.Claims;
@@ -56,6 +57,10 @@ namespace SnailMS.Controllers
             }
             return PartialView(userDtos);
         }
-
+        [HttpGet("/User/Calls")]
+        public IActionResult GetCalls(string fromDate, string toDate)
+        {
+            return PartialView(service.Calls.GetAllCallDto());
+        }
     }
 }

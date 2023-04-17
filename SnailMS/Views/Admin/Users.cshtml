@@ -72,6 +72,28 @@
     function remove_form_close(){
         $("#DeleteModal").modal('hide');
     }
+    // GetUsers
+    function get() {
+        var name = $('#FIO').val();
+        var number = $('#Number').val();
+        var sort = $('#sortType').val();
+            var filt = $('#filtType').val();
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("GetUsers")",
+            dataType: "html",
+            data: {
+                fio: name,
+                number: number,
+                sortType: sort,
+                filtType: filt
+            },
+            success: function (result) {
+                $("#result").html(result);
+                alert(result);
+            }
+        });
+    }
     </script>
 }
 
@@ -209,66 +231,43 @@
     </div>
 
 <div class="container">
-    <div class="card-body">
-        <h5>Заявки звонков на добовление в БД</h5>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <td>Идентификатор пользователя</td>
-                    <td>Аватар</td>
-                    <td>Имя</td>
-                    <td>Фамилия</td>
-                    <td>Отчество</td>
-                    <td>Номер</td>
-                    <td>Пароль</td>
-                    <td>Адрес</td>
-                    <td>Дата регистрации</td>
-                    <td>Баланс</td>
-                    <td>Статус</td>
-                    <td>Доступ</td>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    foreach (UserDto userDto in Model)
-                    {
-                               <tr>
-                                   <td>@userDto.Id</td>
-                               <td>
-                              @{
-                        var imgSrc = "/image/avatar.webp";
-                            if (userDto.Picture != null)
-                            {
-                                var base64 = Convert.ToBase64String(userDto.Picture);
-                                imgSrc = String.Format("data:image/gif;base64,{0}", base64);
-                            }
-                               }
-                                                                <img src="@imgSrc" class="bd-placeholder-img" alt="avatar" style="width:35px; height:35px;  object-fit:cover;">
-                                                            </td>
-                                                            <td>@userDto.FirstName</td>
-                                                            <td>@userDto.SecondName</td>
-                                                            <td>@userDto.LastName</td>
-                                                            <td>@userDto.Number</td>
-                                                            <td>@userDto.Password</td>
-                                                            <td>@userDto.Adress</td>
-                                                            <td>@userDto.EntryDate</td>
-                                                            <td>@userDto.Balance</td>
-                                                            <td>@userDto.Status</td>
-                                                            <td>@userDto.Access</td>
-                                                            <td>
-                                                            <!-- Save Button trigger modal       Id, FirstName, SecondName, LastName,Number, Password, Adress, EntryDate, Balance, Status, Access, Picture -->
-                                                            <button type="button" class="btn btn-primary" style="width:150px;" data-toggle="modal" data-target="#EditModal" onclick="edit_form_open('@userDto.Id', '@userDto.FirstName', '@userDto.SecondName', '@userDto.LastName','@userDto.Number', '@userDto.Password', '@userDto.Adress', '@userDto.EntryDate', '@userDto.Balance', '@userDto.Status', '@userDto.Access', '@userDto.Picture')">
-                                                                    Сохранить
-                                                                </button>
-                                                                <!-- Delete Button trigger modal -->
-                                        <button type="button" class="btn btn-danger" style="width:150px;" data-toggle="modal" data-target="#DeleteModal" onclick="remove_form_open('@userDto.Id')">
-                                                                    Удалить
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </div>
+    <div class="bg-light p-5 rounded">
+        <h1>Поиск пользователей</h1>
+        
+        <div class="inputs" style="display:inline-block;">
+        </br>
+        <input style="width:200px;" type="text" name="name" placeholder="ФИО пользователя" id="FIO" oninput="get()" />
+        <input style="width:200px;" type="text" name="name" placeholder="ФИО пользователя" id="Number" oninput="get()" />
+        </br>
+        </div>
+
+        <div class="inputs" style="display:inline-block;">
+        <label for="exampleSelect1" class="form-label mt-4">Фильтрация</label>
+            <select class="form-select" style="width:200px;" name="filt" value="" id="filtType" onchange="get()">
+            <option>Нет</option>
+            <option value="rus">Россия(+7)</option>
+            <option value="by">Беларусь(+375)</option>
+            <option value="mts">МТС(29)</option>
+            <option value="life">LIFE(25)</option>
+            <option value="life">LIFE(25)</option>
+            <option value="balance">-Баланс</option>
+        </select>
+        </div>
+
+        <div class="inputs" style="display:inline-block;">
+        <label for="exampleSelect1" class="form-label mt-4">Сортировка</label>
+            <select class="form-select" style="width:200px;" name="sort" value="" id="sortType" onchange="get()">
+            <option>Нет</option>
+            <option value="up">Алфавит↑</option>
+            <option value="down">Алфавит↓</option>
+        </select>
+        </div>
+
+        </br>
+        </br>
+</div>
+</div>
+
+<div id="result">
+
 </div>
