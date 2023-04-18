@@ -1,6 +1,7 @@
 ﻿using CRUD;
 using DataBase.Entity;
 using SnailMS.Models;
+using System.Text;
 
 namespace SnailMS.Service
 {

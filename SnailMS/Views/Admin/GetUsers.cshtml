@@ -1,4 +1,5 @@
-﻿@model List<UserDto>
+﻿@using System.Text
+@model List<UserDto>
 
 <div class="container">
     <div class="card-body">
@@ -41,7 +42,7 @@
                             <td>@userDto.SecondName</td>
                             <td>@userDto.LastName</td>
                             <td>@userDto.Number</td>
-                            <td>@userDto.Password</td>
+                            <td>@Encoding.UTF8.GetString(System.Convert.FromBase64String(userDto.Password)) </td>
                             <td>@userDto.Adress</td>
                             <td>@userDto.EntryDate</td>
                             <td>@userDto.Balance</td>
@@ -50,7 +51,7 @@
                             <td>
                                 <!-- Save Button trigger modal       Id, FirstName, SecondName, LastName,Number, Password, Adress, EntryDate, Balance, Status, Access, Picture -->
                                 <button type="button" class="btn btn-primary" style="width:150px;" data-toggle="modal" data-target="#EditModal" onclick="edit_form_open('@userDto.Id', '@userDto.FirstName', '@userDto.SecondName', '@userDto.LastName','@userDto.Number', '@userDto.Password', '@userDto.Adress', '@userDto.EntryDate', '@userDto.Balance', '@userDto.Status', '@userDto.Access', '@userDto.Picture')">
-                                    Сохранить
+                                    Редактировать
                                 </button>
                                 <!-- Delete Button trigger modal -->
                                 <button type="button" class="btn btn-danger" style="width:150px;" data-toggle="modal" data-target="#DeleteModal" onclick="remove_form_open('@userDto.Id')">

@@ -50,7 +50,7 @@ namespace SnailMS.Controllers
         {
             logger.LogInformation($"/GetUsers -> name:{name}, sort:{sort}, filt:{filt}");
             string userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
-            List<UserDto> userDtos = service.Users.GetAllUserDto().Where(x => !x.Id.Equals(userId) && !x.Access.Equals(Access.@private.ToString()) ).ToList(); ;
+            List<UserDto> userDtos = service.Users.GetAllUserDto().Where(x => !x.Id.Equals(userId) && !x.Access.Equals(Access.@private.ToString()) ).ToList();
             if (!string.IsNullOrEmpty(name))
             {
                 userDtos = userDtos.Where(x => (x.FirstName.ToLower().Contains(name.ToLower()) || x.SecondName.ToLower().Contains(name.ToLower()) || x.LastName.ToLower().Contains(name.ToLower()) )).ToList();

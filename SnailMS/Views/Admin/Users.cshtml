@@ -2,6 +2,42 @@
 
 @section Scripts{
     <script>
+        $(document).ready(function () { 
+            $("#own-popup").hide();
+        });
+    
+    //  AddUser
+        function add_form_open() {
+            $("#AddModal").modal('show');
+        }
+        function add_form_confirm() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddUser")",
+                dataType: "text", // ? text or html
+                data: {
+                    Id: $('#AddUserDtoId').val(),
+                    FirstName: $('#AddUserDtoFirstName').val(),
+                    SecondName: $('#AddUserDtoSecondName').val(),
+                    LastName: $('#AddUserDtoLastName').val(),
+                    Number: $('#AddUserDtoNumber').val(),
+                    Password: $('#AddUserDtoPassword').val(),
+                    Adress: $('#AddUserDtoAdress').val(),
+                    Balance: $('#AddUserDtoBalance').val(),
+                    Status: $('#AddUserDtoStatus').val(),
+                    Access: $('#AddUserDtoAccess').val()
+                    //Picture: $('#UserDtoPicture')
+                },
+                success: function (result) {
+                    $("#AddModal").modal('hide');
+                    $("#InfoMessage").html(result);
+                    $("#own-popup").show();
+                }
+            });
+        }
+        function add_form_close() {
+            $("#AddModal").modal('hide');
+        }
     // Edit UserDto Form
     function edit_form_open(Id, FirstName, SecondName, LastName,
                             Number, Password, Adress, EntryDate,
@@ -17,9 +53,9 @@
         $("#UserDtoBalance").val(Balance);
         $("#UserDtoStatus").val(Status);
         $("#UserDtoAccess").val(Access);
+        //picture
 
-
-        alert(Id+' '+FirstName+' '+SecondName+' '+LastName+' '+Number+' '+Picture);
+        alert(Id+' '+FirstName+' '+SecondName+' '+LastName+' '+Number+' ');
         $("#EditModal").modal('show');
     }
     function edit_form_confirm(){
@@ -38,11 +74,12 @@
                 EntryDate: $('#UserDtoEntryDate').val(),
                 Balance: $('#UserDtoBalance').val(),
                 Status: $('#UserDtoStatus').val(),
-                Access: $('#UserDtoAccess').val(),
-                Picture: $('#UserDtoPicture')
+                Access: $('#UserDtoAccess').val()
+                //Picture: $('#UserDtoPicture')
             },
             success: function (result) {
                 $("#error_handler").html(result);
+                $("#EditModal").modal('hide');
                 alert(result);
             }
         });
@@ -52,6 +89,7 @@
     }
     // Delete UserDto Form
     function remove_form_open(userId){
+        alert(userId);
         $("#DeleteModal").modal('show');
         $("#deleteUserId").val(userId);
     }
@@ -61,11 +99,12 @@
                 url: "@Url.Action("DeleteUser")",
                 dataType: "text", // ? text or html
                 data: {
-                    userId: $('#UserDtoId').val()
+                    userId: $('#deleteUserId').val()
                 },
                 success: function (result) {
-                    $("#error_handler").html(result);
-                    alert(result);
+                    $("#DeleteModal").modal('hide');
+                    $("#InfoMessage").html(result);
+                    $("#own-popup").show();
                 }
             });
     }
@@ -90,10 +129,25 @@
             },
             success: function (result) {
                 $("#result").html(result);
-                alert(result);
             }
         });
     }
+    // BalanceNotificationsToUsers
+        function Sendnotifications() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SendNotifications")",
+                dataType: "html",
+                success: function (result) {
+                    $("#own-popup").show();
+                    $("#InfoMessage").html(result);
+                }
+            });
+        }
+    // popup
+        function popup_close() {
+            $("#own-popup").fadeOut(1000);
+        }
     </script>
 }
 
@@ -102,54 +156,164 @@
             transform: scale(5);
             transition: 1s;
     }
+
+        .own-popup {
+            position: absolute;
+            bottom: 60px;
+            right: 20px;
+            width: 300px;
+            height: 150px;
+            padding: 10px;
+            background-color: gainsboro;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px #000;
+            text-align: center;
+            font-size: large;
+            font-style: sans-serif;
+        }
+
+        .popup-close {
+            cursor:pointer;
+            color: red;
+            position: relative;
+            float: right;
+            font-size: 18px;
+            font-weight: bold;
+        }
 </style>
 
-<!-- Edit Form Modal -->
-<div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!-- Add Form Modal -->
+<div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Сохранение звонка в БД</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="edit_form_close()">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Редактирование пользователя</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="add_form_close()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h3 style="color:red;" id="error_handler"></h3>
-
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="UserDtoId" placeholder="">
-                        <label for="floatingInput">Id пользователя</label>
-                        <span class="badge bg-danger"></span>
-                    </div>
-                    </br>
 
                     <!-- Image -->
 
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="UserDtoFirstName" placeholder="">
-                        <label for="floatingInput">Id пользователя</label>
-                        <span class="badge bg-danger"></span>
-                    </div>
-                    </br>
-
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="UserDtoSecondName" placeholder="">
+                        <input type="text" class="form-control" id="AddUserDtoFirstName" placeholder="">
                         <label for="floatingInput">Имя</label>
                         <span class="badge bg-danger"></span>
                     </div>
                     </br>
 
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="UserDtoLastName" placeholder="">
+                        <input type="text" class="form-control" id="AddUserDtoSecondName" placeholder="">
                         <label for="floatingInput">Фамилия</label>
                         <span class="badge bg-danger"></span>
                     </div>
                     </br>
 
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="UserDtoNumber" placeholder="">
+                        <input type="text" class="form-control" id="AddUserDtoLastName" placeholder="">
                         <label for="floatingInput">Отчество</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="AddUserDtoNumber" placeholder="">
+                        <label for="floatingInput">Номер телефона</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="AddUserDtoPassword" placeholder="">
+                        <label for="floatingInput">Пароль</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="AddUserDtoAdress" placeholder="">
+                        <label for="floatingInput">Адрес</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="AddUserDtoBalance" placeholder="">
+                        <label for="floatingInput">Баланс</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="inputs" style="display:inline-block;">
+                        <label for="exampleSelect1" class="form-label mt-4">Статус аккаунта</label>
+                        <select class="form-select" style="width:200px;" value="" id="AddUserDtoStatus">
+                            <option value="">Нет</option>
+                            <option value="active">Активный</option>
+                            <option value="banned">Заблокированный</option>
+                        </select>
+                    </div>
+                    </br>
+
+                    <div class="inputs" style="display:inline-block;">
+                        <label for="exampleSelect1" class="form-label mt-4">Доступ аккаунта</label>
+                        <select class="form-select" style="width:200px;" value="" id="AddUserDtoAccess">
+                            <option value="">Нет</option>
+                            <option value="public">Публичный</option>
+                            <option value="private">Приватный</option>
+                        </select>
+                    </div>
+                    </br>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="add_form_close()">Закрыть</button>
+                    <button type="button" class="btn btn-primary" onclick="add_form_confirm()">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Edit Form Modal -->
+<div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Редактирование пользователя</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="edit_form_close()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <input type="hidden" class="form-control" id="UserDtoId" placeholder="">
+
+                    <!-- Image -->
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoFirstName" placeholder="">
+                        <label for="floatingInput">Имя</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoSecondName" placeholder="">
+                        <label for="floatingInput">Фамилия</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoLastName" placeholder="">
+                        <label for="floatingInput">Отчество</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="UserDtoNumber" placeholder="">
+                        <label for="floatingInput">Номер телефона</label>
                         <span class="badge bg-danger"></span>
                     </div>
                     </br>
@@ -182,24 +346,30 @@
                     </div>
                     </br>
 
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="UserDtoStatus" placeholder="">
-                        <label for="floatingInput">Статус аккаунта</label>
-                        <span class="badge bg-danger"></span>
+                    <div class="inputs" style="display:inline-block;">
+                        <label for="exampleSelect1" class="form-label mt-4">Статус аккаунта</label>
+                        <select class="form-select" style="width:200px;" value="" id="UserDtoStatus">
+                            <option value="">Нет</option>
+                            <option value="active">Активный</option>
+                            <option value="banned">Заблокированный</option>
+                        </select>
                     </div>
                     </br>
 
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="UserDtoAccess" placeholder="">
-                        <label for="floatingInput">Доступ аккаунта</label>
-                        <span class="badge bg-danger"></span>
+                    <div class="inputs" style="display:inline-block;">
+                        <label for="exampleSelect1" class="form-label mt-4">Доступ аккаунта</label>
+                        <select class="form-select" style="width:200px;" value="" id="UserDtoAccess">
+                            <option value="">Нет</option>
+                            <option value="public">Публичный</option>
+                            <option value="private">Приватный</option>
+                        </select>
                     </div>
                     </br>
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="edit_form_close()">Закрыть</button>
-                    <button type="button" class="btn btn-primary" onclick="save_form_confirm()">Сохранить</button>
+                    <button type="button" class="btn btn-primary" onclick="edit_form_confirm()">Сохранить</button>
                 </div>
             </div>
         </div>
@@ -210,21 +380,20 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Сохранение звонка в БД</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Удаление пользователя</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="remove_form_close()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h3 style="color:red;" id="error_handler"></h3>
 
                     <h2>Вы уверены, что хотите удалить пользователя?</h2>
                     <input type="hidden" id="deleteUserId"/>
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="remove_form_close()">Закрыть</button>
-                    <button type="button" class="btn btn-primary" onclick="delete_form_confirm()">Сохранить</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="remove_form_close()">Нет</button>
+                    <button type="button" class="btn btn-primary" onclick="remove_form_confirm()">Да</button>
                 </div>
             </div>
         </div>
@@ -237,31 +406,40 @@
         <div class="inputs" style="display:inline-block;">
         </br>
         <input style="width:200px;" type="text" name="name" placeholder="ФИО пользователя" id="FIO" oninput="get()" />
-        <input style="width:200px;" type="text" name="name" placeholder="ФИО пользователя" id="Number" oninput="get()" />
+        <input style="width:200px;" type="text" name="name" placeholder="Номер телефона" id="Number" oninput="get()" />
         </br>
         </div>
 
         <div class="inputs" style="display:inline-block;">
         <label for="exampleSelect1" class="form-label mt-4">Фильтрация</label>
-            <select class="form-select" style="width:200px;" name="filt" value="" id="filtType" onchange="get()">
-            <option>Нет</option>
-            <option value="rus">Россия(+7)</option>
-            <option value="by">Беларусь(+375)</option>
-            <option value="mts">МТС(29)</option>
-            <option value="life">LIFE(25)</option>
-            <option value="life">LIFE(25)</option>
-            <option value="balance">-Баланс</option>
+                <select class="form-select" style="width:200px;" name="filt" value="" id="filtType" oninput="get()">
+                    <option value="">Нет</option>
+                    <option value="rus">Россия(+7)</option>
+                    <option value="by">Беларусь(+375)</option>
+                    <option value="mts">МТС(29)</option>
+                    <option value="life">LIFE(25)</option>
+                    <option value="life">LIFE(25)</option>
+                    <option value="balance-">Баланс(-)</option>
+                    <option value="balance+">Баланс(+)</option>
         </select>
         </div>
 
         <div class="inputs" style="display:inline-block;">
         <label for="exampleSelect1" class="form-label mt-4">Сортировка</label>
-            <select class="form-select" style="width:200px;" name="sort" value="" id="sortType" onchange="get()">
-            <option>Нет</option>
-            <option value="up">Алфавит↑</option>
-            <option value="down">Алфавит↓</option>
+                <select class="form-select" style="width:200px;" name="sort" value="" id="sortType" oninput="get()">
+                    <option value="">Нет</option>
+                    <option value="up">Алфавит↑</option>
+                    <option value="down">Алфавит↓</option>
         </select>
         </div>
+
+            <button type="button" class="btn btn-primary" style="width:150px;" onclick="Sendnotifications()">
+            Отправить уведомления должникам
+            </button>
+
+            <button type="button" class="btn btn-primary" style="width:150px;" onclick="add_form_open()">
+                Добавить обонента
+            </button>
 
         </br>
         </br>
@@ -269,5 +447,11 @@
 </div>
 
 <div id="result">
-
+    <h1 style="text-align:center;">Введите данные для поиска</h1>
 </div>
+
+    <div id="own-popup" class="own-popup">
+        <span class="popup-close" onclick="popup_close()">X</span>
+        <h2>Информация</h2>
+        <span><div id="InfoMessage"></div></span>
+    </div>

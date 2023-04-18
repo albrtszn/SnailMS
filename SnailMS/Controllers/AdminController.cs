@@ -1,8 +1,11 @@
 ﻿using CRUD;
 using DataBase.Entity;
+using DataBase.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic.FileIO;
 using SnailMS.Models;
+using System.Security.AccessControl;
 
 namespace SnailMS.Controllers
 {
@@ -33,23 +36,121 @@ namespace SnailMS.Controllers
         [HttpGet("/Admin/GetUsers")]
         public IActionResult GetUsers(string fio, string number, string sortType, string filtType)
         {
-            return PartialView(service.Users.GetAllUserDto());
+            logger.LogInformation($"/Admin/GetUsers -> fio:{fio}, number:{number}, sort:{sortType}, filt:{filtType}");
+            List<UserDto> userDtos = service.Users.GetAllUserDto().ToList();
+            //  query
+            if (!string.IsNullOrEmpty(fio))
+            {
+                userDtos = userDtos.Where(x => (x.FirstName.ToLower().Contains(fio.ToLower()) || x.SecondName.ToLower().Contains(fio.ToLower()) || x.LastName.ToLower().Contains(fio.ToLower()))).ToList();
+            }
+            if (!string.IsNullOrEmpty(number))
+            {
+                userDtos = userDtos.Where(x => (x.Number.Contains(number))).ToList();
+            }
+            //  sort
+            if (!string.IsNullOrEmpty(sortType))
+            {
+                switch (sortType)
+                {
+                    case "up":
+                        userDtos = userDtos.OrderBy(x => x.FirstName).ToList();
+                        userDtos.ForEach(x => Console.WriteLine(x.FirstName));
+                        break;
+                    case "down":
+                        userDtos = userDtos.OrderByDescending(x => x.FirstName).ToList();
+                        userDtos.ForEach(x => Console.WriteLine(x.FirstName));
+                        break;
+                }
+            }
+            //  filt
+            if (!string.IsNullOrEmpty(filtType))
+            {
+                switch (filtType)
+                {
+                    case "balance-":
+                        userDtos = userDtos.Where(x => x.Balance < 0).ToList();
+                        break;
+                    case "balance+":
+                        userDtos = userDtos.Where(x => x.Balance >= 0).ToList();
+                        break;
+                }
+            }
+            return PartialView(userDtos);
         }
         [HttpPost("/Admin/User/Edit")]
         public IActionResult EditUser(UserDto editUserDto)
         {
-            return Redirect("/Admin/User");
-        }
-        [HttpGet("/Admin/User/Add")]
-        public IActionResult AddUser()
-        {
-            return View();
+            logger.LogInformation($"/Admin/User/EditUser -> id:{editUserDto.Id}, firstName:{editUserDto.FirstName} " +
+                                  $"access:{editUserDto.Access}, status:{editUserDto.Status}");
+            service.Users.DeleteUserById(editUserDto.Id);
+            service.Users.SaveUserDto(editUserDto);
+            data.UserRoles.SaveUserRole(new UserRole
+            {
+                UserId = editUserDto.Id,
+                RoleName = "user"
+            });
+            return Content("Данные отредактированы");
         }
         [HttpPost("/Admin/User/Add")]
         public IActionResult AddUser(UserDto userDtoToSave)
         {
-            service.Users.SaveUserDto(userDtoToSave);
-            return Redirect("/Admin/User");
+            logger.LogInformation($"/Admin/User/EditUser -> id:{userDtoToSave.Id}, firstName:{userDtoToSave.FirstName} " +
+                                  $"access:{userDtoToSave.Access}, status:{userDtoToSave.Status}");
+            if (!string.IsNullOrEmpty(userDtoToSave.FirstName) && !string.IsNullOrEmpty(userDtoToSave.SecondName) &&
+                !string.IsNullOrEmpty(userDtoToSave.LastName) && !string.IsNullOrEmpty(userDtoToSave.Number) &&
+                !string.IsNullOrEmpty(userDtoToSave.Password) && !string.IsNullOrEmpty(userDtoToSave.Status) &&
+                !string.IsNullOrEmpty(userDtoToSave.Access) && !string.IsNullOrEmpty(userDtoToSave.Adress) )
+            {
+                userDtoToSave.EntryDate = DateTime.Now;
+                //userDtoToSave.Balance = 0m;
+                userDtoToSave.Id = Guid.NewGuid().ToString();
+                service.Users.SaveUserDto(userDtoToSave);
+                return Content("Пользователь добавлен");
+            }
+            return Content("Ошибка->Пользователь не добавлен");
+        }
+        [HttpPost("/Admin/User/DeleteUser")]
+        public IActionResult DeleteUser(string userId)
+        {
+            logger.LogInformation($"/Admin/User/DleteUser-> userId:{userId}");
+            //data.Users.DeleteUserById(userId);
+            service.Users.DeleteUserById(userId);
+            return Content("Пользователь удален");
+        }
+        [HttpPost("/Admin/User/SendNotifications")]
+        public IActionResult SendNotifications()
+        {
+            logger.LogInformation($"/Admin/User/SendNotifications");
+            int countOfUsers = 0;
+            var userDtos = service.Users.GetAllUserDto().ToList();
+            foreach (var userDto in userDtos)
+            {
+                if (userDto.Balance <= 0)
+                {
+                    if (service.Notifications.GetAllNotificationDto().ToList().Count(x => x.UserId.Equals(userDto.Id)) >= 3 && !userDto.Status.Equals(Status.banned))
+                    {
+                        var userToBlock = service.Users.GetUserDtoById(userDto.Id);
+                        userToBlock.Status = Status.banned.ToString();
+                        service.Users.DeleteUserById(userDto.Id);
+                        service.Users.SaveUserDto(userToBlock);
+                    }
+                    else
+                    {
+                        service.Notifications.SaveNotificationDto(new NotificationDto
+                        {
+                            UserId = userDto.Id,
+                            Message = "Пополните баланс для избежании блокировки."
+                        });
+                        countOfUsers++;
+                    }
+                }
+            }
+            if (countOfUsers > 0)
+            {
+                return Content("Уведомления отправлены " + countOfUsers + "пользователям(лю)");
+            } else {
+                return Content("Уведомления не отправлены, т.к. нет должников");
+            }
         }
         /*
          *      Manager

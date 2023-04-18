@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataBase.Migrations
 {
     [DbContext(typeof(EFDBContext))]
-    [Migration("20230320134730_nullable_picture")]
-    partial class nullable_picture
+    [Migration("20230418192121_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -237,8 +237,7 @@ namespace DataBase.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("Picture")
                         .HasColumnType("varbinary(max)");

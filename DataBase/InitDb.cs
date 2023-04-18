@@ -32,7 +32,7 @@ namespace DataBase
                 SecondName = "Богомолов",
                 LastName = "Наумович",
                 Number = "+375293179361",
-                Password = Convert.ToBase64String(Encoding.UTF8.GetBytes("password1234")),
+                Password = Convert.ToBase64String(Encoding.UTF8.GetBytes("password1234")),//"password1234",
                 Adress = "г. Москва, ул. Крутова 5, кв. 54",
                 EntryDate = DateTime.Parse("15:20 07.03.2023"),
                 Balance = 15.15m,

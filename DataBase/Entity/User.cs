@@ -19,8 +19,8 @@ namespace DataBase.Entity
         [Required(ErrorMessage = "Введите номер телефона")]
         [StringLength(13, MinimumLength = 13, ErrorMessage = "Длина 13 символов -> +375XXYYYZZCC")]
         public string Number { get; set; }
-        [Required(ErrorMessage = "Введите пароль")]
-        [StringLength(25, MinimumLength = 8, ErrorMessage = "Минимальная длина - 8 символов, максимальная - 25 символов")]
+        //[Required(ErrorMessage = "Введите пароль")]
+        //[StringLength(25, MinimumLength = 8, ErrorMessage = "Минимальная длина - 8 символов, максимальная - 25 символов")]
         public string Password { get; set; }
         public string Adress { get; set; }
         public DateTime EntryDate { get; set; }
