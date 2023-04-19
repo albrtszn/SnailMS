@@ -12,26 +12,30 @@ namespace SnailMS.Service
             data = _data;
         }
 
-        public CallDto ConvertCallToDto(Call Call)
+        public CallDto? ConvertCallToDto(Call Call)
         {
+            if (Call == null) return null;
             return new CallDto
             {
                 Id = Call.Id,
                 UserId = Call.UserId,
                 Number = Call.Number,
                 StartTime = Call.StartTime,
-                EndTime = Call.EndTime
+                EndTime = Call.EndTime,
+                ManagerId = Call.ManagerId
             };
         }
-        public Call ConvertDtoToCall(CallDto CallDto)
+        public Call? ConvertDtoToCall(CallDto CallDto)
         {
+            if (CallDto == null) return null;
             return new Call
             {
                 Id = CallDto.Id,
                 UserId = CallDto.UserId,
                 Number = CallDto.Number,
                 StartTime = CallDto.StartTime,
-                EndTime = CallDto.EndTime
+                EndTime = CallDto.EndTime,
+                ManagerId = CallDto.ManagerId
             };
         }
 
@@ -48,9 +52,14 @@ namespace SnailMS.Service
             }
             return CallDtos;
         }
-        public CallDto GetCallDtoById(string id)
+        public CallDto? GetCallDtoById(string id)
         {
-            return ConvertCallToDto(data.Calls.GetCallById(id));
+            var callDto = ConvertCallToDto(data.Calls.GetCallById(id));
+            if (callDto != null)
+            {
+                return callDto;
+            }
+            return null;
         }
         public void DeleteCallById(string id)
         {
@@ -62,7 +71,9 @@ namespace SnailMS.Service
             {
                 DeleteCallById(CallDtoToSave.Id);
             }
-            data.Calls.SaveCall(ConvertDtoToCall(CallDtoToSave));
+            var call = ConvertDtoToCall(CallDtoToSave);
+            call.Manager = data.Managers.GetManagerById(call.ManagerId);
+            data.Calls.SaveCall(call);
         }
     }
 }

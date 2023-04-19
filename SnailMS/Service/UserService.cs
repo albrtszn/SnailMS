@@ -12,7 +12,18 @@ namespace SnailMS.Service
         {
             data = _data;
         }
-        
+        // Base64 logic
+        private static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+        //
         public UserDto? ConvertUserToDto(User user)
         {
             return new UserDto 
@@ -22,7 +33,7 @@ namespace SnailMS.Service
                 SecondName=user.SecondName,
                 LastName=user.LastName,
                 Number=user.Number,
-                Password=user.Password,
+                Password= Base64Decode(user.Password),
                 Adress=user.Adress,
                 EntryDate=user.EntryDate,
                 Balance=user.Balance,
@@ -40,7 +51,7 @@ namespace SnailMS.Service
                 SecondName = userDto.SecondName,
                 LastName = userDto.LastName,
                 Number = userDto.Number,
-                Password = userDto.Password,
+                Password = Base64Encode(userDto.Password),
                 Adress = userDto.Adress,
                 EntryDate = userDto.EntryDate,
                 Balance = userDto.Balance,

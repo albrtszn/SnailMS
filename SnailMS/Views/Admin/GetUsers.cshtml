@@ -1,5 +1,4 @@
-﻿@using System.Text
-@model List<UserDto>
+﻿@model List<UserDto>
 
 <div class="container">
     <div class="card-body">
@@ -42,7 +41,7 @@
                             <td>@userDto.SecondName</td>
                             <td>@userDto.LastName</td>
                             <td>@userDto.Number</td>
-                            <td>@Encoding.UTF8.GetString(System.Convert.FromBase64String(userDto.Password)) </td>
+                            <td>userDto.Password</td>
                             <td>@userDto.Adress</td>
                             <td>@userDto.EntryDate</td>
                             <td>@userDto.Balance</td>

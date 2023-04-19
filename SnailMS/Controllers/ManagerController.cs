@@ -22,12 +22,10 @@ namespace SnailMS.Controllers
             data = _data;
             service = _service;
         }
-
         public IActionResult Index()
         {
             return View();
         }
-
         /*
          *      TempCall
          */
@@ -42,38 +40,25 @@ namespace SnailMS.Controllers
             return View(service.TempCalls.GetAllTempCallDto());
         }
         [HttpPost("/Manager/TempCall/Delete")]
-        public IActionResult DeleteTempCall(String callDtoId) // check on possible
+        public IActionResult DeleteTempCall(string callDtoId) // check on possible
         {
             logger.LogInformation($"/TempCall/Delete -> {callDtoId}");
+            if (!string.IsNullOrEmpty(callDtoId))
+            {
+                service.TempCalls.DeleteTempCallById(callDtoId);
+            }
             return Content("Удаление успешно");//View(service.TempCalls.GetTempCallDtoById(callDtoId));
         }
         [HttpPost("/Manager/TempCall/Add")]
         public IActionResult AddCall(CallDto callDtoToSave) // check on possible and refresh in js
         {
             logger.LogInformation($"/TempCall/Add -> {callDtoToSave.Id}, {callDtoToSave.UserId}, {callDtoToSave.Number}, {callDtoToSave.StartTime}, {callDtoToSave.EndTime}, {callDtoToSave.ManagerId}");
-            //service.TempCalls.DeleteTempCallById(callDtoToSave.Id);
-            //service.Calls.SaveCallDto(callDtoToSave);
+            if (callDtoToSave!=null) {
+                service.TempCalls.DeleteTempCallById(callDtoToSave.Id);
+                service.Calls.SaveCallDto(callDtoToSave);
+            }
             return Content("Запись добавлена");
         }
 
-        /*
-         *      Call
-         */
-        [HttpGet("/Manager/Call")]
-        public IActionResult Call()
-        {
-            return View(service.Calls.GetAllCallDto());
-        }
-        [HttpGet("/Manager/Call/Edit/{id}")]
-        public IActionResult EditCall(string callId)
-        {
-            return View(service.Calls.GetCallDtoById(callId));
-        }
-        [HttpPost("/Manager/Call/Edit/{id}")]
-        public IActionResult EditCall(CallDto editCallDto)
-        {
-            service.Calls.SaveCallDto(editCallDto);
-            return Redirect("/Manager/Call");
-        }
     }
 }

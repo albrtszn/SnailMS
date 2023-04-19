@@ -3,6 +3,7 @@ using DataBase.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
+using Microsoft.VisualBasic.FileIO;
 using SnailMS.Models;
 using System.Linq;
 using System.Security.Claims;
@@ -46,21 +47,92 @@ namespace SnailMS.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult GetUsers(string name, string sort, string filt)// !access check and self find and lowcase
+        public IActionResult GetUsers(string name, string number, string sortType, string filtType)// !access check and self find and lowcase
         {
-            logger.LogInformation($"/GetUsers -> name:{name}, sort:{sort}, filt:{filt}");
+            logger.LogInformation($"/User/GetUsers -> name:{name}, sort:{sortType}, filt:{filtType}");
             string userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = userId;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
+            if (service.Users.GetUserDtoById(userId).Status.Equals(Status.banned.ToString()))
+            {
+                return PartialView("Пополните баланс для использования поиска");
+            }
+
             List<UserDto> userDtos = service.Users.GetAllUserDto().Where(x => !x.Id.Equals(userId) && !x.Access.Equals(Access.@private.ToString()) ).ToList();
+            //  query
             if (!string.IsNullOrEmpty(name))
             {
                 userDtos = userDtos.Where(x => (x.FirstName.ToLower().Contains(name.ToLower()) || x.SecondName.ToLower().Contains(name.ToLower()) || x.LastName.ToLower().Contains(name.ToLower()) )).ToList();
+            }
+            if (!string.IsNullOrEmpty(number))
+            {
+                userDtos = userDtos.Where(x => (x.Number.Contains(number))).ToList();
+            }
+            //  filt
+            if (!string.IsNullOrEmpty(filtType))
+            {
+                switch (filtType)
+                {
+                    case "rus":
+                        userDtos = userDtos.Where(x => (x.Number.Contains("+7"))).ToList();
+                        break;
+                    case "by":
+                        userDtos = userDtos.Where(x => (x.Number.Contains("+375"))).ToList();
+                        break;
+                    case "mts":
+                        userDtos = userDtos.Where(x => (x.Number.Contains("+37529"))).ToList();
+                        break;
+                    case "life":
+                        userDtos = userDtos.Where(x => (x.Number.Contains("+37525"))).ToList();
+                        break;
+                }
+            }
+            //  sort
+            if (!string.IsNullOrEmpty(sortType))
+            {
+                switch (sortType)
+                {
+                    case "up":
+                        userDtos = userDtos.OrderBy(x => x.FirstName).ToList();
+                        break;
+                    case "down":
+                        userDtos = userDtos.OrderByDescending(x => x.FirstName).ToList();
+                        break;
+                }
             }
             return PartialView(userDtos);
         }
         [HttpGet("/User/Calls")]
         public IActionResult GetCalls(string fromDate, string toDate)
         {
-            return PartialView(service.Calls.GetAllCallDto());
+            logger.LogInformation($"/User/GetCalls -> fromDate:{fromDate}, toDate:{toDate}");
+            string userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+            UserDto currentUserDto = service.Users.GetUserDtoById(userId);
+
+            List<CallDto> callDtos = service.Calls.GetAllCallDto().ToList().Where(x => x.UserId.Equals(userId) || x.Number.Equals(currentUserDto.Number)).ToList();
+            if (!string.IsNullOrEmpty(fromDate))
+            {
+                DateTime from = DateTime.Parse(fromDate);
+                callDtos = callDtos.Where(x => x.StartTime.Date >= from).ToList();
+            }
+            if (!string.IsNullOrEmpty(toDate))
+            {
+                DateTime to = DateTime.Parse(toDate);
+                callDtos = callDtos.Where(x => x.EndTime.Date <= to).ToList();
+            }
+
+            foreach (var callDto in callDtos)
+            {
+                if (callDto.Number.Equals(currentUserDto.Number))
+                {
+                    callDto.Number = service.Users.GetUserDtoById(callDto.UserId).Number;
+                }
+            }
+
+            return PartialView(callDtos);
         }
     }
 }

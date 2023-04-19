@@ -30,14 +30,12 @@ namespace CRUD.Implementaion
         public IEnumerable<Manager> GetAllManagers()
         {
             IEnumerable<Manager> managers = context.Managers;
-            managers.ToList().ForEach(x => x.Password = Encoding.UTF8.GetString(System.Convert.FromBase64String(x.Password)));
             return managers;
         }
 
         public Manager GetManagerById(string id)
         {
             Manager manager = context.Managers.FirstOrDefault(x => x.Id.Equals(id));
-            manager.Password = Encoding.UTF8.GetString(System.Convert.FromBase64String(manager.Password));
             return manager;
         }
 
@@ -47,7 +45,6 @@ namespace CRUD.Implementaion
             {
                 DeleteManagerById(managerToSave.Id);
             }
-            managerToSave.Password = Encoding.UTF8.GetString(System.Convert.FromBase64String(managerToSave.Password));
             context.Managers.Add(managerToSave);
             context.SaveChanges();
         }

@@ -59,7 +59,7 @@ namespace SnailMS.Controllers
         [HttpPost]
         public IActionResult Login(LoginModel loginModel, string returnUrl)
         {
-            logger.LogInformation($"try of login into-> login:{loginModel.Login}, password:{loginModel.Password}");
+            logger.LogInformation($"/Login-> login:{loginModel.Login}, password:{loginModel.Password}");
 
             /*if (!ModelState.IsValid)
             {
@@ -79,6 +79,8 @@ namespace SnailMS.Controllers
             // user
             if (userDto != null && userDto.Password.Equals(loginModel.Password))
             {
+                logger.LogInformation($"/Login/User-> login:{userDto.Number}, password:{userDto.Password}");
+
                 List<Claim> claims = new List<Claim> {
                     new Claim(ClaimTypes.NameIdentifier, userDto.Id),
                     new Claim(ClaimTypes.Role, Roles.user.ToString())
@@ -92,6 +94,8 @@ namespace SnailMS.Controllers
             // manager
             if (managerDto != null && managerDto.Password.Equals(loginModel.Password))
             {
+                logger.LogInformation($"/Login/Manager-> login:{managerDto.Login}, password:{managerDto.Password}");
+
                 List<Claim> claims = new List<Claim> {
                     new Claim(ClaimTypes.NameIdentifier, managerDto.Id),
                     new Claim(ClaimTypes.Role, Roles.manager.ToString())
@@ -105,6 +109,8 @@ namespace SnailMS.Controllers
             // admin
             if (adminDto != null && adminDto.Password.Equals(loginModel.Password))
             {
+                logger.LogInformation($"/Login/Admin-> login:{adminDto.Login}, password:{adminDto.Password}");
+
                 List<Claim> claims = new List<Claim> {
                     new Claim(ClaimTypes.NameIdentifier, adminDto.Id),
                     new Claim(ClaimTypes.Role, Roles.admin.ToString())

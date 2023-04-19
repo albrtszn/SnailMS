@@ -54,11 +54,9 @@ namespace SnailMS.Controllers
                 {
                     case "up":
                         userDtos = userDtos.OrderBy(x => x.FirstName).ToList();
-                        userDtos.ForEach(x => Console.WriteLine(x.FirstName));
                         break;
                     case "down":
                         userDtos = userDtos.OrderByDescending(x => x.FirstName).ToList();
-                        userDtos.ForEach(x => Console.WriteLine(x.FirstName));
                         break;
                 }
             }
@@ -227,6 +225,26 @@ namespace SnailMS.Controllers
         {
             logger.LogInformation($"/Admin/Notifications/Add -> {noteDto.Id}, {noteDto.UserId}, {noteDto.Message}");
             return Content("");
+        }
+
+        /*
+         *      Call
+         */
+        [HttpGet("/Manager/Call")]
+        public IActionResult Call()
+        {
+            return View(service.Calls.GetAllCallDto());
+        }
+        [HttpGet("/Manager/Call/Edit/{id}")]
+        public IActionResult EditCall(string callId)
+        {
+            return View(service.Calls.GetCallDtoById(callId));
+        }
+        [HttpPost("/Manager/Call/Edit/{id}")]
+        public IActionResult EditCall(CallDto editCallDto)
+        {
+            service.Calls.SaveCallDto(editCallDto);
+            return Redirect("/Manager/Call");
         }
     }
 }
