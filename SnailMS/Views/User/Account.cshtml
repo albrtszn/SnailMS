@@ -105,8 +105,9 @@
                                 <p class="mb-0">Баланс</p>
                             </div>
                             <div class="col-sm-9">
-                                <p class="text-muted mb-0">@Model.Balance</p>
-                                <a asp-controller="User" asp-action="Balance">Пополнить баланс</a>
+                                <p class="text-muted mb-0">@Model.Balance
+                                <a style="float:right;" asp-controller="User" asp-action="Balance">Пополнить баланс</a>
+                                </p>
                             </div>
                             </div>
                         </div>
@@ -131,17 +132,17 @@
                                         {
                                             if (notification != null)
                                             {
-                                                    <tr>
-                                                        <td>@notification.Message</td>
-                                                        <td>@notification.Message</td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td>@notification.Message</td>
+                                                            <td>@notification.Message</td>
+                                                        </tr>
                                             }
                                         }
                                     }else{
-                                            <tr>
-                                                <td>Ящик уведомлений пуст</td>
-                                                <td>☻</td>
-                                            </tr>
+                                                <tr>
+                                                    <td>Ящик уведомлений пуст</td>
+                                                    <td>☻</td>
+                                                </tr>
                                     }
                                 }
                                     </tbody>
@@ -160,8 +161,8 @@
                     <hr />
                               <div class="inputs" style="display:inline-block;">
                               </br>
-                              <input type="date" style="width:200px;" id="startDate" min="2015-01-01" max="2023-04-31" onchange="get()">
-                              <input type="date" style="width:200px;" id="endDate" min="2015-01-01" max="2023-04-31" onchange="get()">
+                              <input type="date" style="width:200px;" id="startDate" min="2015-01-01" max="2023-05-31" onchange="get()">
+                              <input type="date" style="width:200px;" id="endDate" min="2015-01-01" max="2023-05-31" onchange="get()">
                           </br>
                       </div>
                   </br>

@@ -42,6 +42,11 @@ namespace SnailMS.Controllers
         [HttpPost("/Manager/TempCall/Delete")]
         public IActionResult DeleteTempCall(string callDtoId) // check on possible
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
             logger.LogInformation($"/TempCall/Delete -> {callDtoId}");
             if (!string.IsNullOrEmpty(callDtoId))
             {
@@ -52,11 +57,20 @@ namespace SnailMS.Controllers
         [HttpPost("/Manager/TempCall/Add")]
         public IActionResult AddCall(CallDto callDtoToSave) // check on possible and refresh in js
         {
-            logger.LogInformation($"/TempCall/Add -> {callDtoToSave.Id}, {callDtoToSave.UserId}, {callDtoToSave.Number}, {callDtoToSave.StartTime}, {callDtoToSave.EndTime}, {callDtoToSave.ManagerId}");
-            if (callDtoToSave!=null) {
+            logger.LogInformation($"/manager/tempCall/Edit -> number:{callDtoToSave.Number}, StartTime:{callDtoToSave.StartTime}, " +
+                                  $"endTime:{callDtoToSave.EndTime}");
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
+            /*logger.LogInformation($"/TempCall/Add -> {callDtoToSave.Id}, {callDtoToSave.UserId}, {callDtoToSave.Number}, {callDtoToSave.StartTime}, {callDtoToSave.EndTime}, {callDtoToSave.ManagerId}");
+            if (callDtoToSave!=null && !string.IsNullOrEmpty(callDtoToSave.Id)) {
+                callDtoToSave.Id = Guid.NewGuid().ToString();
                 service.TempCalls.DeleteTempCallById(callDtoToSave.Id);
                 service.Calls.SaveCallDto(callDtoToSave);
             }
+            service.Calls.SaveCallDto(callDtoToSave);*/
             return Content("Запись добавлена");
         }
 

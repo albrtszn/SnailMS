@@ -1,0 +1,41 @@
+﻿@model List<CallDto>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <td>Id абонента</td>
+            <td>Вызываемый номер телефона</td>
+            <td>Время начала</td>
+            <td>Время кончания</td>
+            <td>Id оператора</td>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            if (Model.Count() != 0)
+            {
+                foreach (var call in Model)
+                {
+                    if (call != null)
+                    {
+                        <tr>
+                            <td>@call.UserId</td>
+                            <td>@call.Number</td>
+                            <td>@call.StartTime</td>
+                            <td>@call.EndTime</td>
+                            <td>@call.ManagerId</td>
+                        </tr>
+                    }
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>Звонков нет</td>
+                    <td>☻</td>
+                    <td>☻</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

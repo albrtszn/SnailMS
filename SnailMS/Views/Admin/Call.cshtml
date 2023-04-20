@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Просмотр звонков";
+}
+
+@section Scripts{
+    <script>
+        // GetCalls
+        function get() {
+            var start = $('#startDate').val();
+            var end = $('#endDate').val();
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetCalls")",
+                dataType: "html",
+                data: {
+                    from: start,
+                    to: end
+                },
+                success: function (result) {
+                    $("#result").html(result);
+                }
+            });
+        }
+        $(document).ready(function () {
+            get();
+        });
+    </script>
+}
+
+<div class="container">
+    <div class="bg-light p-5 rounded">
+        <h1>Просмотр звонков</h1>
+
+        <div class="inputs" style="display:inline-block;">
+            <label for="exampleSelect1" class="form-label mt-4">Начальная дата</label>
+            </br>
+                <input type="date" style="width:200px;" id="startDate" min="2015-01-01" max="2023-05-31" oninput="get()">
+            </br>
+        </div>
+
+        <div class="inputs" style="display:inline-block;">
+            <label for="exampleSelect1" class="form-label mt-4">Конечная дата</label>
+            </br>
+                <input type="date" style="width:200px;" id="endDate" min="2015-01-01" max="2023-05-31" oninput="get()">
+            </br>
+        </div>
+
+        </br>
+        </br>
+    </div>
+</div>
+
+<div id="result" class="container">
+</div>

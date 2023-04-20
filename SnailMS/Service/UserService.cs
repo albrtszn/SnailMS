@@ -96,7 +96,7 @@ namespace SnailMS.Service
             User? user = data.Users.GetUserById(id);
             if (user != null)
             {
-                Console.WriteLine($"get user: {user.Id}, {user.Picture.ToString}");
+                Console.WriteLine($"get user: {user.Id}");
                 return ConvertUserToDto(data.Users.GetUserById(id));
             }
             return null;

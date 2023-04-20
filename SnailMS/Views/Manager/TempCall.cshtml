@@ -60,6 +60,32 @@
             }
         });
     }
+    // Add TempCall Form
+    function add_form_open() {
+        $("#AddTempCall").modal('show');
+    }
+    function add_form_close() {
+        $("#AddTempCall").modal('hide');
+    }
+    function add_form_confirm() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AddCall")",
+            dataType: "text", // ? text or html
+            data: {
+                UserId: $('#AddTempCallUserId').val(),
+                Number: $('#AddTempCallNumber').val(),
+                StartTime: $('#AddTempCallStartTime').val(),
+                EndTime: $('#AddTempCallEndTime').val(),
+                ManagerId: $('#AddTempCallId').val()
+            },
+            success: function (result) {
+                $("#InfoMessage").html(result);
+                $("#AddTempCall").modal('hide');
+                $("#own-popup").show();
+            }
+        });
+    }
     // popup
     function popup_close() {
         $("#own-popup").fadeOut(1000);
@@ -68,9 +94,10 @@
 
 <style>
     .own-popup {
-        position: absolute;
-        bottom: 60px;
-        right: 20px;
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        z-index: 99;
         width: 300px;
         height: 150px;
         padding: 10px;
@@ -167,9 +194,65 @@
 </div>
 </div>
 
+<!-- Add Form Modal-->
+<div class="modal fade" id="AddTempCall" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Добавление звонка</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="add_form_close()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="AddTempCallUserId" placeholder="">
+                    <label for="floatingInput">Id пользователя</label>
+                    <span class="badge bg-danger"></span>
+                </div>
+                </br>
+
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="AddTempCallNumber" placeholder="">
+                    <label for="floatingInput">Номер абонента</label>
+                    <span class="badge bg-danger"></span>
+                </div>
+                </br>
+
+                <div class="form-floating">
+                    <input type="datetime-local" class="form-control" id="AddTempCallStartTime" placeholder="">
+                    <label for="floatingInput">Время начала звонка</label>
+                    <span class="badge bg-danger"></span>
+                </div>
+                </br>
+
+                <div class="form-floating">
+                    <input type="datetime-local" class="form-control" id="AddTempCallEndTime" placeholder="">
+                    <label for="floatingInput">Время конца звонка</label>
+                    <span class="badge bg-danger"></span>
+                </div>
+                </br>
+
+                <input type="hidden" id="AddTempCallId" value="@ViewBag.userId"/>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="add_form_close()">Отмена</button>
+                    <button type="button" class="btn btn-primary" onclick="add_form_confirm()">Добавить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container">
 <div class="card-body">
     <h5>Заявки звонков на добовление в БД</h5>
+        
+        <button type="button" class="btn btn-danger" style="width:150px;" data-toggle="modal" data-target="#exampleModalCenter" onclick="add_form_open()">
+            Добавить звонок
+        </button>
+
     <table class="table table-hover">
         <thead>
             <tr>

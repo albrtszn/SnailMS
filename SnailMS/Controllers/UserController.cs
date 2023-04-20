@@ -61,7 +61,7 @@ namespace SnailMS.Controllers
                 return PartialView("Пополните баланс для использования поиска");
             }
 
-            List<UserDto> userDtos = service.Users.GetAllUserDto().Where(x => !x.Id.Equals(userId) && !x.Access.Equals(Access.@private.ToString()) ).ToList();
+            List<UserDto> userDtos = service.Users.GetAllUserDto().Where(x => !x.Id.Equals(userId) && !x.Access.Equals(Access.@private.ToString()) && !x.Status.Equals(Status.banned.ToString()) ).ToList();
             //  query
             if (!string.IsNullOrEmpty(name))
             {

@@ -2,7 +2,6 @@
 
 <div class="container">
     <div class="card-body">
-        <h5>Заявки звонков на добовление в БД</h5>
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -41,7 +40,7 @@
                             <td>@userDto.SecondName</td>
                             <td>@userDto.LastName</td>
                             <td>@userDto.Number</td>
-                            <td>userDto.Password</td>
+                            <td>@userDto.Password</td>
                             <td>@userDto.Adress</td>
                             <td>@userDto.EntryDate</td>
                             <td>@userDto.Balance</td>
@@ -55,6 +54,9 @@
                                 <!-- Delete Button trigger modal -->
                                 <button type="button" class="btn btn-danger" style="width:150px;" data-toggle="modal" data-target="#DeleteModal" onclick="remove_form_open('@userDto.Id')">
                                     Удалить
+                                </button>
+                                <button type="button" class="btn btn-danger" style="width:150px;" data-toggle="modal" data-target="#DeleteModal" onclick="note_form_open('@userDto.Id')">
+                                    Отправить уведомление
                                 </button>
                             </td>
                         </tr>

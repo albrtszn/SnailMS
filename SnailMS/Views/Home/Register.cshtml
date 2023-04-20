@@ -54,6 +54,33 @@
             <input class="form-control" type="file" name="Picture" id="formFile">
         </div>
         </br>
+
+            <div class="form-floating">
+                <input type="text" asp-for="Balance" class="form-control" id="AddUserDtoBalance" placeholder="">
+                <label for="floatingInput">Баланс</label>
+                <span class="badge bg-danger"></span>
+            </div>
+            </br>
+
+            <div class="inputs" style="display:inline-block;">
+                <label for="exampleSelect1" class="form-label mt-4">Статус аккаунта</label>
+                <select class="form-select" asp-for="Status" style="width:200px;" value="" id="AddUserDtoStatus">
+                    <option value="">Нет</option>
+                    <option value="active">Активный</option>
+                    <option value="banned">Заблокированный</option>
+                </select>
+            </div>
+            </br>
+
+            <div class="inputs" style="display:inline-block;">
+                <label for="exampleSelect1" class="form-label mt-4">Доступ аккаунта</label>
+                <select class="form-select" asp-for="Access" style="width:200px;" value="" id="AddUserDtoAccess">
+                    <option value="">Нет</option>
+                    <option value="public">Публичный</option>
+                    <option value="private">Приватный</option>
+                </select>
+            </div>
+            </br>
         <button class="w-100 btn btn-lg btn-primary" type="submit">Регисрация</button>
     </form>
 </main>

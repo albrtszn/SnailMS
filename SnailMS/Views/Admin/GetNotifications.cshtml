@@ -1,0 +1,41 @@
+﻿@model List<NotificationDto>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <td>Id абонента</td>
+            <td>Сообщение</td>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            if (Model.Count() != 0)
+            {
+                foreach (var note in Model)
+                {
+                    if (note != null)
+                    {
+                        <tr>
+                            <td>@note.UserId</td>
+                            <td>@note.Message</td>
+                            <td>
+                                <!-- Delete Button trigger modal -->
+                                <button type="button" class="btn btn-danger" style="width:150px;" data-toggle="modal" data-target="#DeleteModal" onclick="remove_form_open('@note.Id')">
+                                    Удалить
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>Уведомлений нет</td>
+                    <td>☻</td>
+                    <td>☻</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

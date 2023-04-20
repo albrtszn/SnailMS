@@ -146,7 +146,7 @@ namespace SnailMS.Controllers
             userDto.Access = Access.@public.ToString();
             userDto.Status = Status.active.ToString();  
             userDto.EntryDate = DateTime.Now;
-            userDto.Balance = 0.10m;
+            //userDto.Balance = 0.10m;
             //logger.LogInformation($"register-> {userDto.ToString()}");
 
             service.Users.SaveUserDto(userDto);
@@ -154,20 +154,7 @@ namespace SnailMS.Controllers
                 UserId = userDto.Id, 
                 RoleName = Roles.user.ToString() }
             );
-
-            var props = new AuthenticationProperties
-            {
-                IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromHours(1))
-            };
-
-            List<Claim> claims = new List<Claim> {
-                    new Claim(ClaimTypes.NameIdentifier, userDto.Id),
-                    new Claim(ClaimTypes.Role, Roles.user.ToString())
-                };
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
-            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), props);
-            return Redirect("/");
+            return Redirect("/Admin/User");
         }
 
         [HttpGet]

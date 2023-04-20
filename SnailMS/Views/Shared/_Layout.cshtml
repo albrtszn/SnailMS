@@ -20,7 +20,7 @@
 <body id="main_body">
 
     <!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">-->
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color:#668E99;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color:#668E99;  position: sticky; position: -webkit-sticky; top: 0; ">
                 <div class="container-fluid">
                     <a class="navbar-brand" style="margin-top:-4px;" href="/">
                         <img src="/image/snail_logo1.png" style="width:30px; height:30px; filter:invert(1);" />
@@ -74,7 +74,7 @@
                                         <a class="dropdown-item" asp-controller="Admin" asp-action="Managers">Менеджеры</a>
                                         <a class="dropdown-item" asp-controller="Admin" asp-action="Admins">Администраторы</a>
                                         <a class="dropdown-item" asp-controller="Admin" asp-action="Call">Звонки</a>
-                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Notifications">Уведомления</a>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Notification">Уведомления</a>
                                         <a class="dropdown-item" asp-controller="Home" asp-action="LogOut">Выйти</a>
                                 </li>
                             }if (ViewBag.role.Equals("user"))

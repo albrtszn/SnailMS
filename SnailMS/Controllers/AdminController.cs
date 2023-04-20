@@ -6,6 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualBasic.FileIO;
 using SnailMS.Models;
 using System.Security.AccessControl;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Security.Claims;
 
 namespace SnailMS.Controllers
 {
@@ -65,6 +67,18 @@ namespace SnailMS.Controllers
             {
                 switch (filtType)
                 {
+                    case "rus":
+                        userDtos = userDtos.Where(x => (x.Number.Contains("+7"))).ToList();
+                        break;
+                    case "by":
+                        userDtos = userDtos.Where(x => (x.Number.Contains("+375"))).ToList();
+                        break;
+                    case "mts":
+                        userDtos = userDtos.Where(x => (x.Number.Contains("+37529"))).ToList();
+                        break;
+                    case "life":
+                        userDtos = userDtos.Where(x => (x.Number.Contains("+37525"))).ToList();
+                        break;
                     case "balance-":
                         userDtos = userDtos.Where(x => x.Balance < 0).ToList();
                         break;
@@ -80,13 +94,28 @@ namespace SnailMS.Controllers
         {
             logger.LogInformation($"/Admin/User/EditUser -> id:{editUserDto.Id}, firstName:{editUserDto.FirstName} " +
                                   $"access:{editUserDto.Access}, status:{editUserDto.Status}");
+            /*if (HttpContext.Request.Form.Files.Count != 0)
+            {
+                IFormFileCollection files = HttpContext.Request.Form.Files;
+                editUserDto.Picture = service.Users.IFormFileToByteArray(files[0]);
+                logger.LogInformation($"register picture-> {service.Users.IFormFileToByteArray(files[0])}");
+            }
+            else
+            {
+                var userDto = service.Users.GetUserDtoById(editUserDto.Id);
+                if (userDto.Picture!=null)
+                {
+                    editUserDto.Picture = userDto.Picture;
+                }
+            }*/
+            editUserDto.Picture = service.Users.GetUserDtoById(editUserDto.Id).Picture;
             service.Users.DeleteUserById(editUserDto.Id);
             service.Users.SaveUserDto(editUserDto);
-            data.UserRoles.SaveUserRole(new UserRole
+            /*data.UserRoles.SaveUserRole(new UserRole
             {
                 UserId = editUserDto.Id,
                 RoleName = "user"
-            });
+            });*/
             return Content("Данные отредактированы");
         }
         [HttpPost("/Admin/User/Add")]
@@ -204,47 +233,54 @@ namespace SnailMS.Controllers
          *      Notification
          */
         [HttpGet("/Admin/Notification")]
-        public IActionResult Notifications()
+        public IActionResult Notification()
         {
-            return View(service.Notifications.GetAllNotificationDto());
+            return View();
         }
-        [HttpPost("/Admin/Notification/Edit")]
-        public IActionResult EditNotification(NotificationDto editNoteDto)
+        [HttpGet("/Admin/GetNotifications")]
+        public IActionResult GetNotifications()
         {
-            logger.LogInformation($"/Admin/Notification/Edit -> {editNoteDto.Id}, {editNoteDto.UserId}, {editNoteDto.Message}");
-            return Content("");
+            return PartialView(service.Notifications.GetAllNotificationDto());
         }
-        [HttpPost("/Admin/Notification/Delete")]
+        [HttpPost("/Admin/Notification")]
         public IActionResult DeleteNotification(int id)
         {
             logger.LogInformation($"/Admin/Notification/Delete -> {id}");
-            return Content("");
+            return Content("Уведомление удалено");
         }
-        [HttpPost("/Admin/Notification/Add")]
+        [HttpPost("/Admin/AddNotification")]
         public IActionResult AddNotification(NotificationDto noteDto)
         {
             logger.LogInformation($"/Admin/Notifications/Add -> {noteDto.Id}, {noteDto.UserId}, {noteDto.Message}");
-            return Content("");
+            return Content("Уведомление отправлено");
         }
-
         /*
          *      Call
          */
-        [HttpGet("/Manager/Call")]
+        [HttpGet("/Admin/Call")]
         public IActionResult Call()
         {
-            return View(service.Calls.GetAllCallDto());
+            return View();
         }
-        [HttpGet("/Manager/Call/Edit/{id}")]
-        public IActionResult EditCall(string callId)
+        [HttpGet("/Admin/GetCalls")]
+        public IActionResult GetCalls(string from, string to)
         {
-            return View(service.Calls.GetCallDtoById(callId));
-        }
-        [HttpPost("/Manager/Call/Edit/{id}")]
-        public IActionResult EditCall(CallDto editCallDto)
-        {
-            service.Calls.SaveCallDto(editCallDto);
-            return Redirect("/Manager/Call");
+            logger.LogInformation($"/Admin/GetCalls -> fromDate:{from}, toDate:{to}");
+            string userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+            AdminDto currentAdminDto = service.Admins.GetAdminDtoById(userId);
+
+            List<CallDto> callDtos = service.Calls.GetAllCallDto().ToList();
+            if (!string.IsNullOrEmpty(from))
+            {
+                DateTime fromDate = DateTime.Parse(from);
+                callDtos = callDtos.Where(x => x.StartTime.Date >= fromDate).ToList();
+            }
+            if (!string.IsNullOrEmpty(to))
+            {
+                DateTime toDate = DateTime.Parse(to);
+                callDtos = callDtos.Where(x => x.EndTime.Date <= toDate).ToList();
+            }
+            return PartialView(callDtos);
         }
     }
 }

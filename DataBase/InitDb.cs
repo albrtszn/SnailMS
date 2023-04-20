@@ -79,7 +79,7 @@ namespace DataBase
                 FirstName = "Марина",
                 SecondName = "Иванцова",
                 LastName = "Панкратовна",
-                Number = "+375297891233",
+                Number = "+375297891255",
                 Password = Convert.ToBase64String(Encoding.UTF8.GetBytes("password1234")),//"password1234",
                 Adress = "г. Березники, Дорожная ул., д. 21 кв.125",
                 EntryDate = DateTime.Parse("13:13 15.04.2023"),
@@ -182,8 +182,7 @@ namespace DataBase
                     UserId = user.Id,
                     Number = "+375293332211",
                     StartTime = DateTime.Parse("23.03.2023 9:45:00"),
-                    EndTime = DateTime.Parse("23.03.2023 10:00:00"),
-                    User = user
+                    EndTime = DateTime.Parse("23.03.2023 10:00:00")
                 });
 
                 dbContext.TempCalls.Add(new TempCall
@@ -192,8 +191,7 @@ namespace DataBase
                     UserId = user1.Id,
                     Number = "+375293179361",
                     StartTime = DateTime.Parse("01.04.2023 10:15:01"),
-                    EndTime = DateTime.Parse("01.04.2023 12:00:34"),
-                    User = user1
+                    EndTime = DateTime.Parse("01.04.2023 12:00:34")
                 });
 
                 dbContext.TempCalls.Add(new TempCall
@@ -202,8 +200,7 @@ namespace DataBase
                     UserId = user.Id,
                     Number = "+375297891233",
                     StartTime = DateTime.Parse("10.04.2023 9:45:00"),
-                    EndTime = DateTime.Parse("10.04.2023 10:48:33"),
-                    User = user
+                    EndTime = DateTime.Parse("10.04.2023 10:48:33")
                 });
             }
 
@@ -216,9 +213,7 @@ namespace DataBase
                     Number = "+375293332211",
                     StartTime = DateTime.Parse("01.04.2023 12:12:12"),
                     EndTime = DateTime.Parse("01.04.2023 12:13:13"),
-                    ManagerId = manager.Id,
-                    Manager = manager,
-                    User = user
+                    ManagerId = manager.Id
                 });
 
                 dbContext.Calls.Add(new Call
@@ -228,9 +223,7 @@ namespace DataBase
                     Number = "+375293179361",
                     StartTime = DateTime.Parse("02.04.2023 10:10:10"),
                     EndTime = DateTime.Parse("02.04.2023 10:12:12"),
-                    ManagerId = manager.Id,
-                    Manager = manager,
-                    User = user1
+                    ManagerId = manager.Id
                 });
             }
 

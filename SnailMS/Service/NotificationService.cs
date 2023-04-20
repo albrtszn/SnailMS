@@ -25,7 +25,6 @@ namespace SnailMS.Service
         {
             return new Notification
             {
-                Id = notificationDto.Id,
                 UserId = notificationDto.UserId,
                 Message = notificationDto.Message
             };
