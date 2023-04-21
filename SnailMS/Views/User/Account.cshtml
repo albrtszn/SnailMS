@@ -8,6 +8,12 @@
 
 @section Scripts{
     <script>
+        $(document).ready(function () {
+            $("#own-popup").hide();
+        });
+        function popup_close() {
+            $("#own-popup").fadeOut(1000);
+        }
     // GetCalls
     function get() {
         var start = $('#startDate').val();
@@ -26,8 +32,101 @@
             }
         });
     }
+    // Deposit Balance
+    function deposit_form_open() {
+            $("#DepositModal").modal('show');
+            $("#NoteUserId").val(userId);
+    }
+    function deposit_form_close() {
+            $("#DepositModal").modal('hide');
+    }
+    function deposit_form_confirm() {
+        var CardId = $('#CardId').val();
+        var Value = $('#Value').val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DepositBalance")",
+            dataType: "html",
+            data: {
+                cardId: CardId,
+                value: Value
+            },
+            success: function (result) {
+                $("#DepositModal").modal('hide');
+                $("#InfoMessage").html(result);
+                $("#own-popup").show();
+            }
+        });
+    }
     </script>
 }
+
+    <style>
+        .own-popup {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            z-index: 99;
+            width: 300px;
+            height: 150px;
+            padding: 10px;
+            background-color: gainsboro;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px #000;
+            text-align: center;
+            font-size: large;
+            font-style: sans-serif;
+        }
+
+        .popup-close {
+            cursor: pointer;
+            color: red;
+            position: relative;
+            float: right;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+
+    <!-- Deposit Form Modal -->
+    <div class="modal fade" id="DepositModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Пополнение баланса</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="deposit_form_close()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="CardId" placeholder="">
+                        <label for="floatingInput">Номер карты</label>
+                        <span class="badge bg-danger"></span>
+                    </div>
+                    </br>
+
+                    <div class="inputs" style="display:inline-block;">
+                        <label for="exampleSelect1" class="form-label mt-4">Сумма пополнения</label>
+                        <select class="form-select" style="width:200px;" value="1,00" id="Value">
+                            <option value="1,00">1.00</option>
+                            <option value="5,00">5.00</option>
+                            <option value="10,00">10.00</option>
+                            <option value="15,00">15.00</option>
+                            <option value="20,00">20.00</option>
+                        </select>
+                    </div>
+                    </br>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="deposit_form_close()">Закрыть</button>
+                    <button type="button" class="btn btn-primary" onclick="deposit_form_confirm()">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <section style="background-color: #eee;">
     <div class="container py-5">
@@ -106,7 +205,7 @@
                             </div>
                             <div class="col-sm-9">
                                 <p class="text-muted mb-0">@Model.Balance
-                                <a style="float:right;" asp-controller="User" asp-action="Balance">Пополнить баланс</a>
+                                    <button type="button" class="btn btn-danger" style="float:right;" onclick="deposit_form_open()">Пополнить баланс</button>
                                 </p>
                             </div>
                             </div>
@@ -178,3 +277,9 @@
         </div>
     </div>
 </section>
+
+<div id="own-popup" class="own-popup">
+    <span class="popup-close" onclick="popup_close()">X</span>
+    <h2>Информация</h2>
+    <span><div id="InfoMessage"></div></span>
+</div>

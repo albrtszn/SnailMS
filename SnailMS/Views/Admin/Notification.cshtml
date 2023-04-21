@@ -10,7 +10,6 @@
         });
         // GetNotifications
         function get() {
-            var start = $('#startDate').val();
             $.ajax({
                 type: "GET",
                 url: "@Url.Action("GetNotifications")",
@@ -21,19 +20,18 @@
                 }
             });
         }
-        // Delete UserDto Form
+        // Delete Notification Form
         function remove_form_open(noteId) {
-            alert(noteId);
             $("#DeleteModal").modal('show');
             $("#DeleteNoteId").val(noteId);
         }
         function remove_form_confirm() {
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("DeleteUser")",
+                url: "@Url.Action("DeleteNotification")",
                 dataType: "text", // ? text or html
                 data: {
-                    userId: $('#deleteUserId').val()
+                    noteId: $('#DeleteNoteId').val()
                 },
                 success: function (result) {
                     $("#DeleteModal").modal('hide');

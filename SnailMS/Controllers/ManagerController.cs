@@ -57,21 +57,20 @@ namespace SnailMS.Controllers
         [HttpPost("/Manager/TempCall/Add")]
         public IActionResult AddCall(CallDto callDtoToSave) // check on possible and refresh in js
         {
-            logger.LogInformation($"/manager/tempCall/Edit -> number:{callDtoToSave.Number}, StartTime:{callDtoToSave.StartTime}, " +
-                                  $"endTime:{callDtoToSave.EndTime}");
             if (HttpContext.User.Identity.IsAuthenticated)
             {
                 ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
                 ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
             }
-            /*logger.LogInformation($"/TempCall/Add -> {callDtoToSave.Id}, {callDtoToSave.UserId}, {callDtoToSave.Number}, {callDtoToSave.StartTime}, {callDtoToSave.EndTime}, {callDtoToSave.ManagerId}");
-            if (callDtoToSave!=null && !string.IsNullOrEmpty(callDtoToSave.Id)) {
+            logger.LogInformation($"/TempCall/Add -> {callDtoToSave.Id}, {callDtoToSave.UserId}, {callDtoToSave.Number}, {callDtoToSave.StartTime}, {callDtoToSave.EndTime}, {callDtoToSave.ManagerId}");
+            if (callDtoToSave!=null && !string.IsNullOrEmpty(callDtoToSave.UserId) 
+                && !string.IsNullOrEmpty(callDtoToSave.Number) && !string.IsNullOrEmpty(callDtoToSave.StartTime.ToString())
+                && !string.IsNullOrEmpty(callDtoToSave.EndTime.ToString()) && !string.IsNullOrEmpty(callDtoToSave.ManagerId)) {
                 callDtoToSave.Id = Guid.NewGuid().ToString();
-                service.TempCalls.DeleteTempCallById(callDtoToSave.Id);
                 service.Calls.SaveCallDto(callDtoToSave);
+                return Content("Запись добавлена");
             }
-            service.Calls.SaveCallDto(callDtoToSave);*/
-            return Content("Запись добавлена");
+            return Content("Ошибка при добавлении звонка");
         }
 
     }

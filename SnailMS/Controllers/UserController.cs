@@ -7,6 +7,7 @@ using Microsoft.VisualBasic.FileIO;
 using SnailMS.Models;
 using System.Linq;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SnailMS.Controllers
 {
@@ -133,6 +134,25 @@ namespace SnailMS.Controllers
             }
 
             return PartialView(callDtos);
+        }
+        [HttpPost("/User/Deposit")]
+        public IActionResult DepositBalance(string cardId, string value)
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                string userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.userId = userId;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
+            if (!string.IsNullOrEmpty(cardId) && !string.IsNullOrEmpty(value))
+            {
+                logger.LogInformation($"/User/DepositBalance -> cardId:{cardId}, value:{decimal.Parse(value).ToString()}");
+                var userDto = service.Users.GetUserDtoById(HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value);
+                userDto.Balance = userDto.Balance + decimal.Parse(value);
+                service.Users.SaveUserDto(userDto);
+                return Content($"Баланс пополнен на {value} BYN");
+            }
+            return Content("Не удалось пополнить баланс");
         }
     }
 }

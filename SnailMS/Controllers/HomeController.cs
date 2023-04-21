@@ -164,8 +164,17 @@ namespace SnailMS.Controllers
             return Redirect("/");
         }
 
-        [Authorize(Roles = "user")]
+
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult FeedBack()
+        {
+            return View();
+        }
+        public IActionResult AboutUs()
         {
             return View();
         }

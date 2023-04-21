@@ -144,41 +144,6 @@ namespace SnailMS.Controllers
             service.Users.DeleteUserById(userId);
             return Content("Пользователь удален");
         }
-        [HttpPost("/Admin/User/SendNotifications")]
-        public IActionResult SendNotifications()
-        {
-            logger.LogInformation($"/Admin/User/SendNotifications");
-            int countOfUsers = 0;
-            var userDtos = service.Users.GetAllUserDto().ToList();
-            foreach (var userDto in userDtos)
-            {
-                if (userDto.Balance <= 0)
-                {
-                    if (service.Notifications.GetAllNotificationDto().ToList().Count(x => x.UserId.Equals(userDto.Id)) >= 3 && !userDto.Status.Equals(Status.banned))
-                    {
-                        var userToBlock = service.Users.GetUserDtoById(userDto.Id);
-                        userToBlock.Status = Status.banned.ToString();
-                        service.Users.DeleteUserById(userDto.Id);
-                        service.Users.SaveUserDto(userToBlock);
-                    }
-                    else
-                    {
-                        service.Notifications.SaveNotificationDto(new NotificationDto
-                        {
-                            UserId = userDto.Id,
-                            Message = "Пополните баланс для избежании блокировки."
-                        });
-                        countOfUsers++;
-                    }
-                }
-            }
-            if (countOfUsers > 0)
-            {
-                return Content("Уведомления отправлены " + countOfUsers + "пользователям(лю)");
-            } else {
-                return Content("Уведомления не отправлены, т.к. нет должников");
-            }
-        }
         /*
          *      Manager
          */
@@ -237,22 +202,65 @@ namespace SnailMS.Controllers
         {
             return View();
         }
+        [HttpPost("/Admin/User/SendNotifications")]
+        public IActionResult SendNotifications()
+        {
+            logger.LogInformation($"/Admin/User/SendNotifications");
+            int countOfUsers = 0;
+            var userDtos = service.Users.GetAllUserDto().ToList();
+            foreach (var userDto in userDtos)
+            {
+                if (userDto.Balance <= 0)
+                {
+                    if (service.Notifications.GetAllNotificationDto().ToList().Count(x => x.UserId.Equals(userDto.Id)) >= 3 && !userDto.Status.Equals(Status.banned))
+                    {
+                        var userToBlock = service.Users.GetUserDtoById(userDto.Id);
+                        userToBlock.Status = Status.banned.ToString();
+                        service.Users.DeleteUserById(userDto.Id);
+                        service.Users.SaveUserDto(userToBlock);
+                    }
+                    else
+                    {
+                        service.Notifications.SaveNotificationDto(new NotificationDto
+                        {
+                            UserId = userDto.Id,
+                            Message = $"Пополните баланс. {DateTime.Now.ToString()}",
+                        });
+                        countOfUsers++;
+                    }
+                }
+            }
+            if (countOfUsers > 0)
+            {
+                return Content("Уведомления отправлены " + countOfUsers + "пользователям(лю)");
+            }
+            else
+            {
+                return Content("Уведомления не отправлены, т.к. нет должников");
+            }
+        }
         [HttpGet("/Admin/GetNotifications")]
         public IActionResult GetNotifications()
         {
             return PartialView(service.Notifications.GetAllNotificationDto());
         }
-        [HttpPost("/Admin/Notification")]
-        public IActionResult DeleteNotification(int id)
+        [HttpPost("/Admin/Notification/Delete")]
+        public IActionResult DeleteNotification(int noteId)
         {
-            logger.LogInformation($"/Admin/Notification/Delete -> {id}");
+            logger.LogInformation($"/Admin/Notification/Delete -> {noteId}");
+            service.Notifications.DeleteNotificationById(noteId);
             return Content("Уведомление удалено");
         }
-        [HttpPost("/Admin/AddNotification")]
+        [HttpPost("/Admin/Notification/Add")]
         public IActionResult AddNotification(NotificationDto noteDto)
         {
             logger.LogInformation($"/Admin/Notifications/Add -> {noteDto.Id}, {noteDto.UserId}, {noteDto.Message}");
-            return Content("Уведомление отправлено");
+            if (noteDto != null)
+            {
+                service.Notifications.SaveNotificationDto(noteDto);
+                return Content("Уведомление отправлено");
+            }
+            return Content("Ошибка при отправки уведомления");
         }
         /*
          *      Call

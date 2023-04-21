@@ -16,6 +16,16 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.10/jquery.validate.unobtrusive.min.js"></script>
     
+    <style>
+        .dropdown-menu {
+            position: fixed;
+            top: 20px;
+            left: 10px;
+            z-index: 99;
+            width: 200px;
+        }
+    </style>
+
 </head>
 <body id="main_body">
 
@@ -32,7 +42,7 @@
                     <div class="collapse navbar-collapse" id="navbarColor01">
                         <ul class="navbar-nav me-auto" style="text-align:right;">
                             <li class="nav-item">
-                                <a class="nav-link" href="/Home/Feedback">Отзывы</a>
+                                <a class="nav-link" href="/Home/FeedBack">Отзывы</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/Home/AboutUs">О нас</a>
@@ -48,7 +58,7 @@
                         {
                             <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" style=" float:right; ; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Войти в аккаунт</a>
-                                <div class="dropdown-menu" style="">
+                        <div class="dropdown-menu" style="position: fixed; top: 50px; margin-left:88%; z-index: 99;  width: 200px; ">
                                     <a class="dropdown-item" asp-controller="Home" asp-action="Login">Войти</a>
                             </li>
                         }
@@ -58,7 +68,7 @@
                             {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" style=" float:right; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Менеджер</a>
-                                    <div class="dropdown-menu" style="margin-left:-80%;">
+                            <div class="dropdown-menu" id="menu" style="position: fixed; top: 50px; margin-left:88%; z-index: 99;  width: 200px;">
                                         <a class="dropdown-item" asp-controller="Manager" asp-action="Index">Главная</a>
                                         <a class="dropdown-item" asp-controller="Manager" asp-action="TempCall">Заявки звонков</a>
                                         <a class="dropdown-item" asp-controller="Home" asp-action="LogOut">Выйти</a>
@@ -68,7 +78,7 @@
                             {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" style=" float:right; color:darkgray;" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Админ</a>
-                                    <div class="dropdown-menu" style="margin-left:-80%;">
+                            <div class="dropdown-menu" style="position: fixed; top: 50px; margin-left:88%; z-index: 99;  width: 200px;">
                                         <a class="dropdown-item" asp-controller="Admin" asp-action="Index">Главная</a>
                                         <a class="dropdown-item" asp-controller="Admin" asp-action="User">Пользователи</a>
                                         <a class="dropdown-item" asp-controller="Admin" asp-action="Managers">Менеджеры</a>
@@ -94,7 +104,7 @@
                                         @service.Users.GetUserDtoById(ViewBag.UserId).FirstName
                                         <img src="@imgSrc" alt="avatar" class="rounded-circle img-fluid" style="width:28px; height:28px; object-fit:cover;">
                                     </a>
-                                    <div class="dropdown-menu" style="margin-left:-70px;">
+                            <div class="dropdown-menu" style="position: fixed; top: 50px; margin-left:88%; z-index: 99;  width: 200px;">
                                         <a class="dropdown-item" asp-controller="User" asp-action="Account">Аккаунт</a>
                                         <a class="dropdown-item" asp-controller="User" asp-action="Users">Поиск пользователей</a>
                                         <a class="dropdown-item" style="color:red;" asp-controller="Home" asp-action="LogOut" asp-route-userId=@ViewBag.message>Выйти</a>
