@@ -3,7 +3,20 @@
 <script>
     $(document).ready(function () {
         $("#own-popup").hide();
+        get();
     });
+    // Get TempCalls
+    function get() {
+        $.ajax({
+            type: "Get",
+            url: "@Url.Action("GetTempCalls")",
+            dataType: "text",
+            data: { },
+            success: function (result) {
+                $("#TempCalls").html(result);
+            }
+        });
+    }
     // Save TempCall Form
     function save_form_open(Id, UserId, Number, StartTime, EndTime) {
         $("#TempCallId").val(Id);
@@ -20,7 +33,7 @@
     function save_form_confirm(){
         $.ajax({
             type: "POST",
-            url: "@Url.Action("AddCall")",
+            url: "@Url.Action("SaveCall")",
             dataType: "text",
             data: {
                 Id: $('#TempCallId').val(),
@@ -36,6 +49,15 @@
                 $("#own-popup").show();
             }
         });
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DeleteTempCall")",
+            dataType: "text", // ? text or html
+            data: {
+                callDtoId: $('#TempCallId').val()
+            }
+        });
+        get();
     }
     // Delete TempCall Form
     function delete_form_open(Id) {
@@ -59,6 +81,7 @@
                 $("#own-popup").show();
             }
         });
+        get();
     }
     // Add TempCall Form
     function add_form_open() {
@@ -85,6 +108,7 @@
                 $("#own-popup").show();
             }
         });
+        get();
     }
     // popup
     function popup_close() {
@@ -253,39 +277,7 @@
             Добавить звонок
         </button>
 
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <td>Идентификатор пользователя</td>
-                <td>Вызываемый номер</td>
-                <td>Дата начала звонка</td>
-                <td>Дата окончания звонка</td>
-                <td>Действия</td>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                foreach(TempCallDto tempCallDto in Model){
-                                                  <tr>
-                                                         <td>@tempCallDto.UserId</td>
-                                                         <td>@tempCallDto.Number</td>
-                                                         <td>@tempCallDto.StartTime</td>
-                                                         <td>@tempCallDto.EndTime</td>
-                                                         <td>
-                                                             <!-- Save Button trigger modal -->
-                                                            <button type="button" class="btn btn-primary" style="width:150px;" data-toggle="modal" data-target="#exampleModalCenter" onclick="save_form_open('@tempCallDto.Id','@tempCallDto.UserId','@tempCallDto.Number','@tempCallDto.StartTime','@tempCallDto.EndTime')">
-                                                                 Сохранить                                                                                                       
-                                                             </button>     
-                                                             <!-- Delete Button trigger modal -->
-                                                             <button type="button" class="btn btn-danger" style="width:150px;" data-toggle="modal" data-target="#DeleteModal" onclick="delete_form_open('@tempCallDto.Id')">
-                                                                 Удалить                                                                                                       
-                                                             </button>
-                                                         </td>                                                                                                                           
-                                                  </tr>
-                }
-            }
-        </tbody>
-    </table>
+    <div id="TempCalls"></div>
 </div>
 </div>
 

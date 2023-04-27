@@ -33,6 +33,11 @@ namespace SnailMS.Controllers
         [HttpGet("/Admin/User")]
         public IActionResult Users()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
             return View(service.Users.GetAllUserDto());
         }
         [HttpGet("/Admin/GetUsers")]
@@ -150,6 +155,11 @@ namespace SnailMS.Controllers
         [HttpGet("/Admin/Manager")]
         public IActionResult Managers()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
             return View(service.Managers.GetAllManagerDto());
         }
         [HttpPost("/Admin/Manager/Edit")]
@@ -157,17 +167,32 @@ namespace SnailMS.Controllers
         {
             logger.LogInformation($"/Admin/Manager/Edit -> {editManagerDto.Id},{editManagerDto.Login},{editManagerDto.FirstName}" +
                                                         $",{editManagerDto.SecondName},{editManagerDto.DepartmentName}");
-            if (!ModelState.IsValid)
+            if (!string.IsNullOrEmpty(editManagerDto.Id))
             {
-                return Content("Model is not valid");
+                service.Managers.DeleteManagerById(editManagerDto.Id);
+                service.Managers.SaveManagerDto(editManagerDto);
+                return Content("Учетная запись оператора отредактирована");
             }
-            return StatusCode(200);
+            return Content("Ошибка при изменении");
         }
         [HttpPost("/Admin/Manager/Delete")]
         public IActionResult DeleteManager(string managerId)
         {
             logger.LogInformation($"/Admin/Manager/Delete -> {managerId}");
-            return Content("successful delete");
+            service.Managers.DeleteManagerById(managerId);
+            return Content("Учетная запись оператора удалена");
+        }
+        [HttpPost("/Admin/Manager/Add")]
+        public IActionResult AddManager(ManagerDto managerDto)
+        {
+            logger.LogInformation($"/Admin/Manager/Add -> login:{managerDto.Login}, password:{managerDto.Password}");
+            if (!string.IsNullOrEmpty(managerDto.Login) && !string.IsNullOrEmpty(managerDto.Password))
+            {
+                managerDto.Id = Guid.NewGuid().ToString();
+                service.Managers.SaveManagerDto(managerDto);
+                return Content("Оператор добавлен");
+            }
+            return Content("Ошибка при добавлении оператора");
         }
         /*
          *      Admin
@@ -175,6 +200,11 @@ namespace SnailMS.Controllers
         [HttpGet("/Admin/Admin")]
         public IActionResult Admins()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
             return View(service.Admins.GetAllAdminDto());
         }
         [HttpPost("/Admin/Admin/Edit")]
@@ -182,17 +212,32 @@ namespace SnailMS.Controllers
         {
             logger.LogInformation($"/Admin/Admin/Edit -> {editAdminDto.Id},{editAdminDto.Login},{editAdminDto.FirstName}" +
                                                         $",{editAdminDto.SecondName},{editAdminDto.DepartmentName}");
-            if (!ModelState.IsValid)
+            if (!string.IsNullOrEmpty(editAdminDto.Id) && !string.IsNullOrEmpty(editAdminDto.Login) && !string.IsNullOrEmpty(editAdminDto.Password))
             {
-                return Content("Model is not valid");
+                service.Admins.SaveAdminDto(editAdminDto);
+                return Content("Учетная запись администратора отредактирована");
             }
-            return StatusCode(200);
+            return Content("Ошибка при редактировании учетной записи администратора");
         }
         [HttpPost("/Admin/Admin/Delete")]
         public IActionResult DeleteAdmin(string adminId)
         {
-            logger.LogInformation($"/Admin/Admin/Edit -> {adminId}");
-            return Content("successful delete");
+            logger.LogInformation($"/Admin/Admin/Delete -> {adminId}");
+            service.Admins.DeleteADMINById(adminId);
+            return Content("Учетная запись администратора удалена");
+        }
+        [HttpPost("/Admin/Admin/Add")]
+        public IActionResult AddAdmin(AdminDto adminDto)
+        {
+            logger.LogInformation($"/Admin/Admin/Add -> {adminDto.Id},{adminDto.Login},{adminDto.FirstName}" +
+                                                        $",{adminDto.SecondName},{adminDto.DepartmentName}");
+            if (!string.IsNullOrEmpty(adminDto.Login) && !string.IsNullOrEmpty(adminDto.Password))
+            {
+                adminDto.Id = Guid.NewGuid().ToString();
+                service.Admins.SaveAdminDto(adminDto);
+                return Content("Добавлена учетная запись администратора");
+            }
+            return Content("Ошибка при добавлении учетной записи администратора");
         }
         /*
          *      Notification
@@ -200,6 +245,11 @@ namespace SnailMS.Controllers
         [HttpGet("/Admin/Notification")]
         public IActionResult Notification()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
             return View();
         }
         [HttpPost("/Admin/User/SendNotifications")]
@@ -268,6 +318,11 @@ namespace SnailMS.Controllers
         [HttpGet("/Admin/Call")]
         public IActionResult Call()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
             return View();
         }
         [HttpGet("/Admin/GetCalls")]

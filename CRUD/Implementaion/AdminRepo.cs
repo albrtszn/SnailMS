@@ -32,7 +32,6 @@ namespace CRUD.Implementaion
             IEnumerable<Admin> admins = context.Admins;
             if (admins.Count() != 0)
             {
-                admins.ToList().ForEach(x => x.Password = Encoding.UTF8.GetString(System.Convert.FromBase64String(x.Password)));
             }
             return admins.ToList();
         }

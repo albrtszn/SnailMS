@@ -2,13 +2,15 @@
 
 @section Scripts{
     <script>
+        $(document).ready(function () {
+            $("#own-popup").hide();
+        });
         // Edit ManagerDto Form
         function edit_form_open(Id, Login, Password, FirstName, SecondName, LastName, DepartmentName) {
-            alert('Open edit modal with ->'+Login+' '+FirstName);
 
             $("#EditId").val(Id);
             $("#EditLogin").val(Login);
-            $("#EditPasssword").val(Password);
+            $("#EditPassword").val(Password);
             $("#EditFirstName").val(FirstName);
             $("#EditSecondName").val(SecondName);
             $("#EditLastName").val(LastName);
@@ -24,15 +26,16 @@
                 data: {
                     Id: $('#EditId').val(),
                     Login: $('#EditLogin').val(),
-                    Password: $('#EditPasssword').val(),
+                    Password: $('#EditPassword').val(),
                     FirstName: $('#EditFirstName').val(),
                     SecondName: $('#EditSecondName').val(),
                     LastName: $('#EditLastName').val(),
                     DepartmentName: $('#EditDepartmentName').val()
                 },
                 success: function (result) {
-                    $("#error_handler").html(result);
-                    alert(result);
+                    $("#EditModal").modal('hide');
+                    $("#InfoMessage").html(result);
+                    $("#own-popup").show();
                 }
             });
         }
@@ -42,24 +45,56 @@
         // Delete ManagerDto Form
         function remove_form_open(userId) {
             $("#DeleteModal").modal('show');
-            $("#deleteUserId").val(userId);
+            $("#deleteManagerDtoId").val(userId);
         }
         function remove_form_confirm() {
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("DeleteUser")",
+                url: "@Url.Action("DeleteManager")",
                 dataType: "text", // ? text or html
                 data: {
-                    userId: $('#UserDtoId').val()
+                    managerId: $('#deleteManagerDtoId').val()
                 },
                 success: function (result) {
-                    $("#error_handler").html(result);
-                    alert(result);
+                    $("#DeleteModal").modal('hide');
+                    $("#InfoMessage").html(result);
+                    $("#own-popup").show();
                 }
             });
         }
         function remove_form_close() {
             $("#DeleteModal").modal('hide');
+        }
+        // Add ManagerDto Form
+        function add_form_open() {
+            $("#AddModal").modal('show');
+        }
+        function add_form_confirm() {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddManager")",
+                dataType: "text", // ? text or html
+                data: {
+                    Login: $('#AddLogin').val(),
+                    Password: $('#AddPassword').val(),
+                    FirstName: $('#AddFirstName').val(),
+                    SecondName: $('#AddSecondName').val(),
+                    LastName: $('#AddLastName').val(),
+                    DepartmentName: $('#AddDepartmentName').val()
+                },
+                success: function (result) {
+                    $("#AddModal").modal('hide');
+                    $("#InfoMessage").html(result);
+                    $("#own-popup").show();
+                }
+            });
+        }
+        function add_form_close() {
+            $("#AddModal").modal('hide');
+        }
+        // popup
+        function popup_close() {
+            $("#own-popup").fadeOut(1000);
         }
     </script>
 }
@@ -102,7 +137,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h3 style="color:red;" id="error_handler"></h3>
 
                     <input type="hidden" class="form-control" id="EditId" placeholder="Логин">
 
@@ -139,9 +173,12 @@
                     </div>
                     </br>
 
-                    <div class="form-floating">
-                        <input type="text"  class="form-control" id="EditDepartmentName" placeholder="Отдел">
-                        <label  for="floatingInput5">Отдел</label>
+                    <div class="inputs" style="display:inline-block;">
+                        <label for="exampleSelect1" class="form-label mt-4">Отдел</label>
+                        <select class="form-select" id="EditDepartmentName" style="width:200px;" >
+                            <option value="Operators">Оператор</option>
+                            <option value="HR">HR</option>
+                        </select>
                     </div>
                     </br>
 
@@ -159,29 +196,93 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Сохранение звонка в БД</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Удаление оператора</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="remove_form_close()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h3 style="color:red;" id="error_handler"></h3>
 
-                    <h2>Вы уверены, что хотите удалить пользователя?</h2>
-                    <input type="hidden" id="deleteUserId" />
+                    <h2>Вы уверены, что хотите удалить этого оператора?</h2>
+                    <input type="hidden" id="deleteManagerDtoId" />
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="remove_form_close()">Закрыть</button>
-                    <button type="button" class="btn btn-primary" onclick="delete_form_confirm()">Сохранить</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="remove_form_close()">Нет</button>
+                    <button type="button" class="btn btn-primary" onclick="remove_form_confirm()">Да</button>
                 </div>
             </div>
         </div>
     </div>
-    
+
+    <!-- Add Form Modal -->
+    <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Добавление учетной записи оператора</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="add_form_close()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="AddLogin" placeholder="Логин">
+                        <label for="floatingInput1">Логин</label>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="AddPassword" placeholder="Пароль">
+                        <label for="floatingPassword">Пароль</label>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="AddFirstName" placeholder="Имя">
+                        <label for="floatingInput2">Имя</label>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="AddSecondName" placeholder="Фамилия">
+                        <label for="floatingInput3">Фамилия</label>
+                    </div>
+                    </br>
+
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="AddLastName" placeholder="Отчество">
+                        <label for="floatingInput4">Отчество</label>
+                    </div>
+                    </br>
+
+                    <div class="inputs" style="display:inline-block;">
+                        <label for="exampleSelect1" class="form-label mt-4">Отдел</label>
+                        <select class="form-select" id="AddDepartmentName" style="width:200px;" >
+                            <option value="Operators">Оператор</option>
+                            <option value="HR">HR</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="add_form_close()">Закрыть</button>
+                    <button type="button" class="btn btn-primary" onclick="add_form_confirm()">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="container">
         <div class="card-body">
-            <h5>Таблица сотрудников</h5>
+            <h1>Таблица операторов</h1>
+            </br>
+                <button type="button" class="btn btn-primary" style="width:150px;" data-toggle="modal" data-target="#AddModal" onclick="add_form_open()">
+                        Добавить оператора
+                </button>
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -208,9 +309,9 @@
                                 <td>@managerDto.DepartmentName</td>
 
                                 <td>
-                                    <!-- Save Button trigger modal       Id,Password,FirstName,SecondName,LastName -->
-                                <button type="button" class="btn btn-primary" style="width:150px;" data-toggle="modal" data-target="#EditModal" onclick="edit_form_open('@managerDto.Id','@managerDto.Login','@managerDto.Password','@managerDto.FirstName','@managerDto.SecondName','@managerDto.LastName','@managerDto.DepartmentName')">
-                                        Сохранить
+                                    <!--Edit Button trigger modal       Id,Password,FirstName,SecondName,LastName -->
+                                    <button type="button" class="btn btn-primary" style="width:150px;" data-toggle="modal" data-target="#EditModal" onclick="edit_form_open('@managerDto.Id','@managerDto.Login','@managerDto.Password','@managerDto.FirstName','@managerDto.SecondName','@managerDto.LastName','@managerDto.DepartmentName')">
+                                        Редактировать
                                     </button>
                                     <!-- Delete Button trigger modal -->
                                     <button type="button" class="btn btn-danger" style="width:150px;" data-toggle="modal" data-target="#DeleteModal" onclick="remove_form_open('@managerDto.Id')">

@@ -34,6 +34,7 @@
                     $("#own-popup").show();
                 }
             });
+            get();
         }
         function add_form_close() {
             $("#AddModal").modal('hide');
@@ -78,9 +79,11 @@
                 Picture: $('#UserDtoPicture').val()
             },
             success: function (result) {
-                $("#own-").html(result);
+                $("#InfoMessage").html(result);
+                $("#own-popup").show();
                 $("#EditModal").modal('hide');
                 alert(result);
+                get();
             }
         });
     }
@@ -105,6 +108,7 @@
                     $("#DeleteModal").modal('hide');
                     $("#InfoMessage").html(result);
                     $("#own-popup").show();
+                    get();
                 }
             });
     }
@@ -274,7 +278,6 @@
                     <div class="inputs" style="display:inline-block;">
                         <label for="exampleSelect1" class="form-label mt-4">Статус аккаунта</label>
                         <select class="form-select" style="width:200px;" value="" id="AddUserDtoStatus">
-                            <option value="">Нет</option>
                             <option value="active">Активный</option>
                             <option value="banned">Заблокированный</option>
                         </select>
@@ -284,7 +287,6 @@
                     <div class="inputs" style="display:inline-block;">
                         <label for="exampleSelect1" class="form-label mt-4">Доступ аккаунта</label>
                         <select class="form-select" style="width:200px;" value="" id="AddUserDtoAccess">
-                            <option value="">Нет</option>
                             <option value="public">Публичный</option>
                             <option value="private">Приватный</option>
                         </select>
@@ -382,7 +384,6 @@
                     <div class="inputs" style="display:inline-block;">
                         <label for="exampleSelect1" class="form-label mt-4">Статус аккаунта</label>
                         <select class="form-select" style="width:200px;" value="" id="UserDtoStatus">
-                            <option value="">Нет</option>
                             <option value="active">Активный</option>
                             <option value="banned">Заблокированный</option>
                         </select>
@@ -392,7 +393,6 @@
                     <div class="inputs" style="display:inline-block;">
                         <label for="exampleSelect1" class="form-label mt-4">Доступ аккаунта</label>
                         <select class="form-select" style="width:200px;" value="" id="UserDtoAccess">
-                            <option value="">Нет</option>
                             <option value="public">Публичный</option>
                             <option value="private">Приватный</option>
                         </select>
@@ -508,13 +508,15 @@
             Отправить уведомления должникам
             </button>
 
+            <!--
             <button type="button" class="btn btn-primary" style="width:150px; height:100px;" onclick="add_form_open()">
                 Добавить обонента
             </button>
+            -->
 
             <a asp-controller="Home" asp-action="Register">
                 <button type="button" class="btn btn-primary" style="width:150px; height:100px;" onclick="add_form_open()">
-                Добавить обонента1
+                Добавить обонента
             </button>
             </a>
 

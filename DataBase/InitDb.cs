@@ -25,7 +25,7 @@ namespace DataBase
 
         public static void InitData(EFDBContext dbContext)
         {
-            User user = new User()
+            /*User user = new User()
             {
                 Id = Guid.NewGuid().ToString(),
                 FirstName = "Феликс",
@@ -227,7 +227,7 @@ namespace DataBase
                 });
             }
 
-            dbContext.SaveChanges(true);
+            dbContext.SaveChanges(true);*/
         }
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataBase.Migrations
 {
     [DbContext(typeof(EFDBContext))]
-    [Migration("20230418192121_init")]
+    [Migration("20230426091154_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -153,8 +153,8 @@ namespace DataBase.Migrations
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("UserId")
                         .IsRequired()

@@ -150,8 +150,8 @@ namespace DataBase.Migrations
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("UserId")
                         .IsRequired()

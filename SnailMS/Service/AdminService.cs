@@ -11,7 +11,18 @@ namespace SnailMS.Service
         {
             data = _data;
         }
-
+        // Base64 logic
+        private static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+        //
         public AdminDto ConvertAdminToDto(Admin admin)
         {
             return new AdminDto
@@ -21,7 +32,7 @@ namespace SnailMS.Service
                 SecondName = admin.SecondName,
                 LastName = admin.LastName,
                 Login = admin.Login,
-                Password = admin.Password,
+                Password = Base64Decode(admin.Password),
                 DepartmentName = admin.DepartmentName
             };
         }
@@ -34,7 +45,7 @@ namespace SnailMS.Service
                 SecondName = adminDto.SecondName,
                 LastName = adminDto.LastName,
                 Login = adminDto.Login,
-                Password = adminDto.Password,
+                Password = Base64Encode(adminDto.Password),
                 DepartmentName = adminDto.DepartmentName
             };
         }

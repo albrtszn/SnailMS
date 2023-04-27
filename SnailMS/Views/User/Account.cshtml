@@ -28,7 +28,6 @@
             },
             success: function (result) {
                 $("#result").html(result);
-                alert(result);
             }
         });
     }
@@ -219,7 +218,6 @@
                                     <thead>
                                         <tr>
                                             <td>Сообщение</td>
-                                            <td>Дата</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -232,7 +230,6 @@
                                             if (notification != null)
                                             {
                                                         <tr>
-                                                            <td>@notification.Message</td>
                                                             <td>@notification.Message</td>
                                                         </tr>
                                             }

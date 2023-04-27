@@ -36,7 +36,7 @@ namespace SnailMS.Controllers
         public IActionResult Test(string userId)
         {
             //return View(data.Users.GetAllUsers().ToList().FirstOrDefault(x=>x.Id.Equals(userId))); 244db888-388c-43b4-ae38-b6df94dbfde5
-            return View(service.Users.GetUserDtoById(userId));
+            return Json(service.Users.GetUserDtoById(userId));
         }
         public IActionResult Index()
         {
@@ -54,6 +54,12 @@ namespace SnailMS.Controllers
         [HttpGet("/Home/Login")]
         public IActionResult Login(string? returnUrl) // проверка на забаненного
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+                return Redirect("/Home/Index");
+            }
             return View();
         }
         [HttpPost]
@@ -130,6 +136,11 @@ namespace SnailMS.Controllers
         [HttpGet]
         public IActionResult Register() // проверка на существующего
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
             return View();
         }
         [HttpPost]
@@ -167,15 +178,30 @@ namespace SnailMS.Controllers
 
         public IActionResult Privacy()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
             return View();
         }
 
         public IActionResult FeedBack()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
             return View();
         }
         public IActionResult AboutUs()
         {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
             return View();
         }
 

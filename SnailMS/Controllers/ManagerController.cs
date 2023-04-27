@@ -37,7 +37,12 @@ namespace SnailMS.Controllers
                 ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
                 ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
             }
-            return View(service.TempCalls.GetAllTempCallDto());
+            return View();
+        }
+        [HttpGet("/Manager/GetTempCalls")]
+        public IActionResult GetTempCalls()
+        {
+            return PartialView(service.TempCalls.GetAllTempCallDto());
         }
         [HttpPost("/Manager/TempCall/Delete")]
         public IActionResult DeleteTempCall(string callDtoId) // check on possible
@@ -72,6 +77,24 @@ namespace SnailMS.Controllers
             }
             return Content("Ошибка при добавлении звонка");
         }
-
+        [HttpPost("/Manager/TempCall/Save")]
+        public IActionResult SaveCall(CallDto callDtoToSave) // check on possible and refresh in js
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                ViewBag.userId = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.NameIdentifier)).Value;
+                ViewBag.role = HttpContext.User.Claims.ToList().Find(x => x.Type.Equals(ClaimTypes.Role)).Value;
+            }
+            logger.LogInformation($"/TempCall/Save -> {callDtoToSave.Id}, {callDtoToSave.UserId}, {callDtoToSave.Number}, {callDtoToSave.StartTime}, {callDtoToSave.EndTime}, {callDtoToSave.ManagerId}");
+            if (callDtoToSave != null && !string.IsNullOrEmpty(callDtoToSave.UserId)
+                && !string.IsNullOrEmpty(callDtoToSave.Number) && !string.IsNullOrEmpty(callDtoToSave.StartTime.ToString())
+                && !string.IsNullOrEmpty(callDtoToSave.EndTime.ToString()) && !string.IsNullOrEmpty(callDtoToSave.ManagerId))
+            {
+                //callDtoToSave.Id = Guid.NewGuid().ToString();
+                service.Calls.SaveCallDto(callDtoToSave);
+                return Content("Запись добавлена");
+            }
+            return Content("Ошибка при добавлении звонка");
+        }
     }
 }
