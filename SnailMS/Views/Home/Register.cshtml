@@ -1,6 +1,9 @@
 ﻿@model UserDto
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelper
 
+@{
+    ViewData["Title"] = "Добавление абонента";
+}
 <div class="container">
 <main class="form-signin">
         <form asp-action="Register" method="post" enctype="multipart/form-data">
